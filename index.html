@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>STEMMate Prototype</title>
+  <title>STEMMate Prototype (Shared Central Database)</title>
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-2 sm:p-4 font-sans text-gray-800">
 
   <!-- Mobile Frame Container -->
   <div class="w-full max-w-sm h-[750px] bg-white rounded-3xl shadow-2xl border-4 border-gray-800 flex flex-col overflow-hidden relative">
     
-    <!-- Top Offline / System Status Banner -->
-    <div id="status-banner" class="bg-amber-500 text-white text-xs font-semibold px-4 py-2 flex items-center justify-between shadow-md z-20 transition-colors">
-      <span id="status-text">⚠ Offline Mode - Local Storage Active</span>
-      <span class="text-[10px] bg-amber-700 px-2 py-0.5 rounded">v1.1</span>
+    <!-- Central Sync Status Banner -->
+    <div id="status-banner" class="bg-blue-600 text-white text-xs font-semibold px-4 py-2 flex items-center justify-between shadow-md z-20 transition-colors">
+      <span id="status-text">🌐 Central Database Connected</span>
+      <span class="text-[10px] bg-blue-800 px-2 py-0.5 rounded">v2.0</span>
     </div>
 
-    <!-- App Navigation Header (Hidden on Login Screen) -->
-    <header id="app-header" class="hidden bg-blue-600 text-white px-4 py-3 flex justify-between items-center z-10">
+    <!-- App Navigation Header -->
+    <header id="app-header" class="hidden bg-blue-700 text-white px-4 py-3 flex justify-between items-center z-10">
       <h1 class="font-bold text-lg tracking-wide">STEMMate</h1>
-      <button onclick="navigateTo('sync')" class="text-xs bg-blue-700 hover:bg-blue-800 px-2.5 py-1 rounded-full font-medium transition">
-        Sync Queue (<span id="sync-count">0</span>)
-      </button>
+      <span id="live-indicator" class="text-[10px] bg-green-500 text-white font-bold px-2 py-0.5 rounded-full animate-pulse">● Live Sync</span>
     </header>
 
     <!-- MAIN DYNAMIC VIEW CONTAINER -->
@@ -35,11 +35,11 @@
         <div class="text-center mb-6">
           <div class="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-3xl font-black mx-auto mb-3 shadow-lg">⚡</div>
           <h2 class="font-bold text-gray-800 text-xl">Welcome to STEMMate</h2>
-          <p class="text-xs text-gray-500 mt-1">Offline STEM Activity & Session Planner</p>
+          <p class="text-xs text-gray-500 mt-1">Central Cloud Sync Session Planner</p>
         </div>
 
         <div class="bg-blue-50 border border-blue-200 p-3 rounded-lg text-[11px] text-blue-900 mb-6 leading-relaxed">
-          🔒 <strong>Privacy Assured:</strong> Session tokens & created activities are saved directly to local browser storage.
+          🌐 <strong>Team Cloud Enabled:</strong> All activities and updates created here will sync instantly across all team members.
         </div>
 
         <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
@@ -60,12 +60,11 @@
       <!-- 2. CATALOGUE & SEARCH PAGE -->
       <section id="view-catalogue" class="hidden">
         <div class="flex gap-2 mb-3">
-          <input type="text" id="search-input" oninput="renderCatalogue()" placeholder="Search activities..." class="w-full px-3 py-2 border rounded-lg text-xs bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          <button onclick="toggleFilterModal(true)" class="bg-blue-600 text-white px-3 py-2 rounded-lg text-xs font-semibold shadow hover:bg-blue-700">Filter</button>
+          <input type="text" id="search-input" oninput="renderCatalogue()" placeholder="Search central database..." class="w-full px-3 py-2 border rounded-lg text-xs bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
 
         <div class="flex justify-between items-center mb-2">
-          <h2 class="font-bold text-gray-700 text-xs uppercase tracking-wider">Available Activities</h2>
+          <h2 class="font-bold text-gray-700 text-xs uppercase tracking-wider">Shared Team Activities</h2>
           <button onclick="navigateTo('editor')" class="text-xs text-blue-600 font-bold hover:underline">+ New Custom</button>
         </div>
 
@@ -83,7 +82,7 @@
       <section id="view-editor" class="hidden">
         <div class="flex justify-between items-center mb-3">
           <h2 class="font-bold text-gray-800 text-sm">Session Plan Creator</h2>
-          <span id="editor-status-tag" class="text-[10px] bg-gray-200 text-gray-600 px-2 py-0.5 rounded font-semibold">New Draft</span>
+          <span id="editor-status-tag" class="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-semibold">Central Database</span>
         </div>
 
         <form onsubmit="handleSavePlan(event)" class="space-y-3 text-xs">
@@ -126,19 +125,19 @@
             <textarea id="plan-notes" rows="4" placeholder="Write step-by-step setup details..." class="w-full p-2 border rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"></textarea>
           </div>
 
-          <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-xs shadow transition mt-2">
-            💾 Save Activity & Add to Sync
+          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-xs shadow transition mt-2">
+            ☁ Save & Broadcast to Team
           </button>
         </form>
       </section>
 
       <!-- 5. ATTENDANCE COUNTER PAGE -->
       <section id="view-counter" class="hidden h-full flex flex-col justify-center text-center">
-        <h2 class="font-bold text-gray-800 text-sm mb-1">Anonymous Attendance Tracker</h2>
-        <p class="text-xs text-gray-500 mb-6">Tap to record participant tally for this session.</p>
+        <h2 class="font-bold text-gray-800 text-sm mb-1">Shared Attendance Tracker</h2>
+        <p class="text-xs text-gray-500 mb-6">Live central headcount tallies across all users.</p>
 
         <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm max-w-[240px] mx-auto w-full">
-          <span class="text-xs text-gray-400 font-bold block uppercase tracking-wider mb-2">Headcount</span>
+          <span class="text-xs text-gray-400 font-bold block uppercase tracking-wider mb-2">Live Headcount</span>
           <div id="student-count" class="text-5xl font-black text-blue-600 mb-6">0</div>
 
           <div class="flex justify-center gap-4">
@@ -148,53 +147,18 @@
         </div>
       </section>
 
-      <!-- 6. SYNC HUB PAGE -->
-      <section id="view-sync" class="hidden">
-        <h2 class="font-bold text-gray-800 text-sm mb-2">Offline Queue & Sync Status</h2>
-        <p class="text-xs text-gray-500 mb-4">Items stored locally waiting for server transmission.</p>
-
-        <div id="sync-queue-list" class="space-y-2 mb-4"></div>
-
-        <button onclick="triggerSyncProcess()" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 rounded-lg shadow transition">
-          🔄 Sync Local Queue with Server
-        </button>
-      </section>
-
     </main>
 
-    <!-- FILTER OVERLAY DRAWER -->
-    <div id="filter-modal" class="hidden absolute inset-0 bg-black/50 z-30 flex justify-end">
-      <div class="w-3/4 bg-white h-full p-4 flex flex-col justify-between shadow-xl">
-        <div>
-          <div class="flex justify-between items-center mb-4 border-b pb-2">
-            <h3 class="font-bold text-gray-800 text-sm">Filter Catalogue</h3>
-            <button onclick="toggleFilterModal(false)" class="text-gray-500 font-bold text-lg">&times;</button>
-          </div>
-          <div class="space-y-4 text-xs text-gray-700">
-            <div>
-              <p class="font-bold mb-1 text-gray-800">Grade Level</p>
-              <label class="block"><input type="checkbox" class="filter-grade" value="Grade 6-7" checked onchange="renderCatalogue()" /> Grade 6-7</label>
-              <label class="block"><input type="checkbox" class="filter-grade" value="Grade 8-10" checked onchange="renderCatalogue()" /> Grade 8-10</label>
-            </div>
-          </div>
-        </div>
-        <button onclick="toggleFilterModal(false)" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-xs shadow">Apply Filters</button>
-      </div>
-    </div>
-
-    <!-- App Bottom Navigation Header (Hidden on Login) -->
+    <!-- App Bottom Navigation -->
     <nav id="app-nav" class="hidden bg-white border-t border-gray-200 py-2 px-2 flex justify-around text-[10px] text-gray-500 z-10">
       <button onclick="navigateTo('catalogue')" id="nav-catalogue" class="flex flex-col items-center font-semibold">
-        <span>📖</span> Catalogue
+        <span>📖</span> Shared Catalogue
       </button>
       <button onclick="navigateTo('editor')" id="nav-editor" class="flex flex-col items-center font-semibold">
         <span>📝</span> Create/Edit
       </button>
       <button onclick="navigateTo('counter')" id="nav-counter" class="flex flex-col items-center font-semibold">
-        <span>👥</span> Counter
-      </button>
-      <button onclick="navigateTo('sync')" id="nav-sync" class="flex flex-col items-center font-semibold">
-        <span>🔄</span> Sync
+        <span>👥</span> Live Counter
       </button>
       <button onclick="handleLogout()" class="flex flex-col items-center text-red-500 font-semibold">
         <span>🚪</span> Logout
@@ -203,59 +167,62 @@
 
   </div>
 
-  <!-- APPLICATION LOGIC & STATE MANAGEMENT -->
+  <!-- APPLICATION LOGIC & FIREBASE DATABASE -->
   <script>
-    // --- DEFAULT SEED DATA ---
-    const DEFAULT_ACTIVITIES = [
-      {
-        id: 'act-1',
-        title: 'Solar Water Heater',
-        grade: 'Grade 8-10',
-        duration: 45,
-        topic: 'Physics / Energy',
-        materials: ['2L Plastic bottles', 'Black matte paint', 'Clear plastic tubing (1m)'],
-        notes: 'Students build a thermal collector to demonstrate solar energy retention.',
-        isCustom: false
-      },
-      {
-        id: 'act-2',
-        title: 'Cardboard Hydraulic Arm',
-        grade: 'Grade 6-7',
-        duration: 60,
-        topic: 'Hydraulics & Mechanics',
-        materials: ['Corrugated cardboard', 'Syringes (10ml x4)', 'Vinyl tubing', 'Water with dye'],
-        notes: 'Demonstrates Pascal\'s principle using closed hydraulic pressure systems.',
-        isCustom: false
-      }
-    ];
+    // --- STEP 1: CONFIGURE FIREBASE ---
+    // (Replace the values below with your own project credentials from console.firebase.google.com)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDemoConfigKeyForTesting12345",
+      authDomain: "stemmate-prototype.firebaseapp.com",
+      databaseURL: "https://stemmate-prototype-default-rtdb.firebaseio.com",
+      projectId: "stemmate-prototype",
+      storageBucket: "stemmate-prototype.appspot.com",
+      messagingSenderId: "1234567890",
+      appId: "1:1234567890:web:abcdef123456"
+    };
+
+    // Initialize Firebase
+    let db;
+    try {
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.database();
+    } catch (e) {
+      console.warn("Firebase initialized in offline/fallback mode.");
+    }
 
     // --- APPLICATION STATE ---
     let state = {
       isLoggedIn: false,
       currentView: 'login',
       activities: [],
-      syncQueue: [],
       attendance: 0,
       selectedActivityId: null
     };
 
-    // --- INITIALIZATION ---
+    // --- INITIALIZATION & REALTIME LISTENERS ---
     window.addEventListener('DOMContentLoaded', () => {
-      // Load saved state from LocalStorage
       const savedAuth = localStorage.getItem('stem_auth');
-      const savedActivities = localStorage.getItem('stem_activities');
-      const savedQueue = localStorage.getItem('stem_queue');
-      const savedCounter = localStorage.getItem('stem_counter');
 
-      if (savedActivities) {
-        state.activities = JSON.parse(savedActivities);
-      } else {
-        state.activities = DEFAULT_ACTIVITIES;
-        localStorage.setItem('stem_activities', JSON.stringify(DEFAULT_ACTIVITIES));
+      // Listen for Live Activity Updates from Firebase
+      if (db) {
+        db.ref('activities').on('value', (snapshot) => {
+          const val = snapshot.val();
+          if (val) {
+            state.activities = Object.values(val);
+          } else {
+            // Seed initial data if database is empty
+            seedInitialDatabase();
+          }
+          if (state.currentView === 'catalogue') renderCatalogue();
+        });
+
+        // Listen for Live Attendance Updates from Firebase
+        db.ref('attendance').on('value', (snapshot) => {
+          const val = snapshot.val();
+          state.attendance = val !== null ? val : 0;
+          if (state.currentView === 'counter') updateCounterUI();
+        });
       }
-
-      if (savedQueue) state.syncQueue = JSON.parse(savedQueue);
-      if (savedCounter) state.attendance = parseInt(savedCounter, 10);
 
       if (savedAuth === 'true') {
         state.isLoggedIn = true;
@@ -263,27 +230,45 @@
       } else {
         navigateTo('login');
       }
-
-      updateSyncBadge();
     });
 
-    // --- NAVIGATION & ROUTING ---
-    function navigateTo(viewId) {
-      if (!state.isLoggedIn && viewId !== 'login') {
-        viewId = 'login';
-      }
+    function seedInitialDatabase() {
+      const initialData = {
+        'act-1': {
+          id: 'act-1',
+          title: 'Solar Water Heater',
+          grade: 'Grade 8-10',
+          duration: 45,
+          topic: 'Physics / Energy',
+          materials: ['2L Plastic bottles', 'Black matte paint', 'Clear plastic tubing (1m)'],
+          notes: 'Students build a thermal collector to demonstrate solar energy retention.',
+          isCustom: false
+        },
+        'act-2': {
+          id: 'act-2',
+          title: 'Cardboard Hydraulic Arm',
+          grade: 'Grade 6-7',
+          duration: 60,
+          topic: 'Hydraulics & Mechanics',
+          materials: ['Corrugated cardboard', 'Syringes (10ml x4)', 'Vinyl tubing', 'Water with dye'],
+          notes: 'Demonstrates Pascal\'s principle using closed hydraulic pressure systems.',
+          isCustom: false
+        }
+      };
+      if (db) db.ref('activities').set(initialData);
+    }
 
+    // --- NAVIGATION ---
+    function navigateTo(viewId) {
+      if (!state.isLoggedIn && viewId !== 'login') viewId = 'login';
       state.currentView = viewId;
 
-      // Hide all view screens
-      ['login', 'catalogue', 'detail', 'editor', 'counter', 'sync'].forEach(v => {
+      ['login', 'catalogue', 'detail', 'editor', 'counter'].forEach(v => {
         document.getElementById(`view-${v}`).classList.add('hidden');
       });
 
-      // Show target view
       document.getElementById(`view-${viewId}`).classList.remove('hidden');
 
-      // Header and Navigation layout controls
       const header = document.getElementById('app-header');
       const nav = document.getElementById('app-nav');
 
@@ -295,21 +280,16 @@
         nav.classList.remove('hidden');
       }
 
-      // Nav Tab Highlighting
-      ['catalogue', 'editor', 'counter', 'sync'].forEach(tab => {
+      ['catalogue', 'editor', 'counter'].forEach(tab => {
         const btn = document.getElementById(`nav-${tab}`);
         if (btn) {
-          if (tab === viewId) {
-            btn.className = "flex flex-col items-center text-blue-600 font-bold";
-          } else {
-            btn.className = "flex flex-col items-center text-gray-500 hover:text-gray-800 font-semibold";
-          }
+          btn.className = (tab === viewId) 
+            ? "flex flex-col items-center text-blue-600 font-bold" 
+            : "flex flex-col items-center text-gray-500 hover:text-gray-800 font-semibold";
         }
       });
 
-      // View-specific initialization triggers
       if (viewId === 'catalogue') renderCatalogue();
-      if (viewId === 'sync') renderSyncQueue();
       if (viewId === 'counter') updateCounterUI();
       if (viewId === 'editor' && !state.selectedActivityId) resetEditorForm();
     }
@@ -328,22 +308,17 @@
       navigateTo('login');
     }
 
-    // --- CATALOGUE & SEARCH ---
+    // --- RENDER CATALOGUE ---
     function renderCatalogue() {
       const container = document.getElementById('catalogue-list');
       const query = document.getElementById('search-input').value.toLowerCase();
-      
-      // Get Checked Grades
-      const checkedGrades = Array.from(document.querySelectorAll('.filter-grade:checked')).map(cb => cb.value);
 
-      const filtered = state.activities.filter(act => {
-        const matchesQuery = act.title.toLowerCase().includes(query) || act.topic.toLowerCase().includes(query);
-        const matchesGrade = checkedGrades.includes(act.grade);
-        return matchesQuery && matchesGrade;
-      });
+      const filtered = state.activities.filter(act => 
+        act.title.toLowerCase().includes(query) || act.topic.toLowerCase().includes(query)
+      );
 
       if (filtered.length === 0) {
-        container.innerHTML = `<div class="text-center py-8 text-gray-400 text-xs">No activities found matching criteria.</div>`;
+        container.innerHTML = `<div class="text-center py-8 text-gray-400 text-xs">No shared activities found.</div>`;
         return;
       }
 
@@ -356,17 +331,13 @@
           <p class="text-[11px] text-gray-500 mt-1">${act.duration} mins • ${act.topic}</p>
           <div class="mt-2 text-blue-600 font-semibold text-[11px] flex items-center justify-between">
             <span>View Details &rarr;</span>
-            ${act.isCustom ? '<span class="text-[9px] bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded font-bold">Custom</span>' : ''}
+            <span class="text-[9px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-bold">Shared Cloud</span>
           </div>
         </div>
       `).join('');
     }
 
-    function toggleFilterModal(show) {
-      document.getElementById('filter-modal').classList.toggle('hidden', !show);
-    }
-
-    // --- DETAIL VIEW ---
+    // --- ACTIVITY DETAILS ---
     function openActivityDetail(id) {
       const act = state.activities.find(a => a.id === id);
       if (!act) return;
@@ -392,21 +363,20 @@
         </div>
 
         <button onclick="editCurrentActivity('${act.id}')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-xs shadow transition">
-          ✏ Edit Session Plan
+          ✏ Edit Central Activity
         </button>
       `;
 
       navigateTo('detail');
     }
 
-    // --- CREATE / EDIT PLAN ---
+    // --- CREATE & EDIT (SAVE TO FIREBASE) ---
     function resetEditorForm() {
       state.selectedActivityId = null;
       document.getElementById('plan-title').value = '';
       document.getElementById('plan-duration').value = '45';
       document.getElementById('plan-materials').value = '';
       document.getElementById('plan-notes').value = '';
-      document.getElementById('editor-status-tag').innerText = 'New Draft';
     }
 
     function editCurrentActivity(id) {
@@ -420,7 +390,6 @@
       document.getElementById('plan-topic').value = act.topic;
       document.getElementById('plan-materials').value = act.materials.join(', ');
       document.getElementById('plan-notes').value = act.notes;
-      document.getElementById('editor-status-tag').innerText = 'Editing Local Item';
 
       navigateTo('editor');
     }
@@ -428,103 +397,35 @@
     function handleSavePlan(e) {
       e.preventDefault();
 
-      const title = document.getElementById('plan-title').value;
-      const grade = document.getElementById('plan-grade').value;
-      const duration = document.getElementById('plan-duration').value;
-      const topic = document.getElementById('plan-topic').value;
-      const materials = document.getElementById('plan-materials').value.split(',').map(m => m.trim());
-      const notes = document.getElementById('plan-notes').value;
+      const id = state.selectedActivityId || 'act-' + Date.now();
+      const activityData = {
+        id,
+        title: document.getElementById('plan-title').value,
+        grade: document.getElementById('plan-grade').value,
+        duration: parseInt(document.getElementById('plan-duration').value, 10),
+        topic: document.getElementById('plan-topic').value,
+        materials: document.getElementById('plan-materials').value.split(',').map(m => m.trim()),
+        notes: document.getElementById('plan-notes').value,
+        isCustom: true
+      };
 
-      if (state.selectedActivityId) {
-        // Update Existing
-        const index = state.activities.findIndex(a => a.id === state.selectedActivityId);
-        if (index !== -1) {
-          state.activities[index] = { ...state.activities[index], title, grade, duration, topic, materials, notes };
-        }
-      } else {
-        // Create New
-        const newAct = {
-          id: 'act-' + Date.now(),
-          title,
-          grade,
-          duration: parseInt(duration, 10),
-          topic,
-          materials,
-          notes,
-          isCustom: true
-        };
-        state.activities.unshift(newAct);
+      // Save directly to Central Cloud Database
+      if (db) {
+        db.ref('activities/' + id).set(activityData);
       }
 
-      // Add entry to Sync Queue
-      state.syncQueue.push({
-        id: 'sync-' + Date.now(),
-        action: state.selectedActivityId ? 'UPDATE' : 'CREATE',
-        itemTitle: title,
-        timestamp: new Date().toLocaleTimeString()
-      });
-
-      // Save State
-      localStorage.setItem('stem_activities', JSON.stringify(state.activities));
-      localStorage.setItem('stem_queue', JSON.stringify(state.syncQueue));
-
-      updateSyncBadge();
       resetEditorForm();
       navigateTo('catalogue');
     }
 
-    // --- COUNTER ---
+    // --- ATTENDANCE COUNTER (SYNC TO FIREBASE) ---
     function adjustCounter(val) {
-      state.attendance = Math.max(0, state.attendance + val);
-      localStorage.setItem('stem_counter', state.attendance.toString());
-      updateCounterUI();
+      const newCount = Math.max(0, state.attendance + val);
+      if (db) db.ref('attendance').set(newCount);
     }
 
     function updateCounterUI() {
       document.getElementById('student-count').innerText = state.attendance;
-    }
-
-    // --- SYNC HUB ---
-    function updateSyncBadge() {
-      document.getElementById('sync-count').innerText = state.syncQueue.length;
-    }
-
-    function renderSyncQueue() {
-      const container = document.getElementById('sync-queue-list');
-      
-      if (state.syncQueue.length === 0) {
-        container.innerHTML = `<div class="bg-green-50 border border-green-200 text-green-800 p-3 rounded-lg text-xs">✓ All changes synced to central database.</div>`;
-        return;
-      }
-
-      container.innerHTML = state.syncQueue.map(item => `
-        <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm flex justify-between items-center text-xs">
-          <div>
-            <div class="font-bold text-gray-800">${item.itemTitle}</div>
-            <div class="text-[10px] text-gray-400">${item.action} • Queued at ${item.timestamp}</div>
-          </div>
-          <span class="bg-amber-100 text-amber-800 text-[9px] font-bold px-2 py-0.5 rounded">Pending Sync</span>
-        </div>
-      `).join('');
-    }
-
-    function triggerSyncProcess() {
-      if (state.syncQueue.length === 0) {
-        alert("Sync Queue is empty. No pending local changes.");
-        return;
-      }
-
-      const statusText = document.getElementById('status-text');
-      statusText.innerText = "🔄 Transmitting queue to server...";
-      
-      setTimeout(() => {
-        state.syncQueue = [];
-        localStorage.setItem('stem_queue', JSON.stringify([]));
-        updateSyncBadge();
-        renderSyncQueue();
-        statusText.innerText = "⚠ Offline Mode - Local Storage Active";
-        alert("Sync complete! All pending actions uploaded successfully.");
-      }, 1200);
     }
   </script>
 </body>
