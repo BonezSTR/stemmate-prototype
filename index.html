@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>STEMMate Prototype (Shared Central Database)</title>
+  <title>STEMMate Prototype (Baseline Aligned)</title>
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Firebase SDKs -->
@@ -15,41 +15,41 @@
   <!-- Mobile Frame Container -->
   <div class="w-full max-w-sm h-[750px] bg-white rounded-3xl shadow-2xl border-4 border-gray-800 flex flex-col overflow-hidden relative">
     
-    <!-- Central Sync Status Banner -->
-    <div id="status-banner" class="bg-blue-600 text-white text-xs font-semibold px-4 py-2 flex items-center justify-between shadow-md z-20 transition-colors">
-      <span id="status-text">🌐 Central Database Connected</span>
-      <span class="text-[10px] bg-blue-800 px-2 py-0.5 rounded">v2.0</span>
+    <!-- Central Sync Status Banner (QR-03: Text + Non-color cues) -->
+    <div id="status-banner" class="bg-blue-600 text-white text-xs font-semibold px-3 py-1.5 flex items-center justify-between shadow-md z-20">
+      <span id="status-text">🌐 Cloud Connected</span>
+      <span id="queue-badge" class="text-[10px] bg-blue-800 px-2 py-0.5 rounded font-bold">Queue: 0</span>
     </div>
 
-    <!-- App Navigation Header -->
+    <!-- App Header -->
     <header id="app-header" class="hidden bg-blue-700 text-white px-4 py-3 flex justify-between items-center z-10">
       <h1 class="font-bold text-lg tracking-wide">STEMMate</h1>
-      <span id="live-indicator" class="text-[10px] bg-green-500 text-white font-bold px-2 py-0.5 rounded-full animate-pulse">● Live Sync</span>
+      <span class="text-[10px] bg-green-500 text-white font-bold px-2 py-0.5 rounded-full">● Live</span>
     </header>
 
-    <!-- MAIN DYNAMIC VIEW CONTAINER -->
+    <!-- MAIN VIEW CONTAINER -->
     <main class="flex-1 overflow-y-auto p-4 bg-gray-50 relative">
 
-      <!-- 1. LOGIN PAGE -->
+      <!-- 1. LOGIN PAGE (PR-01 & SR-01) -->
       <section id="view-login" class="h-full flex flex-col justify-center">
         <div class="text-center mb-6">
           <div class="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-3xl font-black mx-auto mb-3 shadow-lg">⚡</div>
-          <h2 class="font-bold text-gray-800 text-xl">Welcome to STEMMate</h2>
-          <p class="text-xs text-gray-500 mt-1">Central Cloud Sync Session Planner</p>
+          <h2 class="font-bold text-gray-800 text-xl">STEMMate Namibia</h2>
+          <p class="text-xs text-gray-500 mt-1">Facilitator Session Planner</p>
         </div>
 
         <div class="bg-blue-50 border border-blue-200 p-3 rounded-lg text-[11px] text-blue-900 mb-6 leading-relaxed">
-          🌐 <strong>Team Cloud Enabled:</strong> All activities and updates created here will sync instantly across all team members.
+          🔒 <strong>Privacy Assured (PR-01):</strong> No learner names or PII are collected or stored.
         </div>
 
         <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
           <div>
             <label class="block text-xs font-bold text-gray-700 mb-1">School ID / Region Code</label>
-            <input type="text" id="login-school" value="SCH-7042" required class="w-full p-2.5 border rounded-lg text-xs bg-white focus:ring-2 focus:ring-blue-500 outline-none" />
+            <input type="text" id="login-school" value="SCH-7042" required class="w-full p-2.5 border rounded-lg text-xs bg-white outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-700 mb-1">Teacher Access PIN</label>
-            <input type="password" id="login-pin" value="1234" required class="w-full p-2.5 border rounded-lg text-xs bg-white focus:ring-2 focus:ring-blue-500 outline-none" />
+            <input type="password" id="login-pin" value="1234" required class="w-full p-2.5 border rounded-lg text-xs bg-white outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
           <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg text-xs shadow-md transition">
             Start Session &rarr;
@@ -57,58 +57,72 @@
         </form>
       </section>
 
-      <!-- 2. CATALOGUE & SEARCH PAGE -->
-      <section id="view-catalogue" class="hidden">
-        <div class="flex gap-2 mb-3">
-          <input type="text" id="search-input" oninput="renderCatalogue()" placeholder="Search central database..." class="w-full px-3 py-2 border rounded-lg text-xs bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <!-- 2. CATALOGUE & MULTI-FILTER PAGE (FR-01) -->
+      <section id="view-catalogue" class="hidden space-y-3">
+        <div class="bg-white p-2.5 border rounded-xl shadow-sm space-y-2">
+          <input type="text" id="search-input" oninput="renderCatalogue()" placeholder="🔍 Search title or materials..." class="w-full px-2.5 py-1.5 border rounded text-xs bg-gray-50 focus:outline-none focus:ring-1 focus:ring-blue-500" />
+          
+          <div class="grid grid-cols-2 gap-1.5 text-[10px]">
+            <select id="filter-grade" onchange="renderCatalogue()" class="p-1 border rounded bg-gray-50">
+              <option value="">All Grade Levels</option>
+              <option value="Grade 6-7">Grade 6-7</option>
+              <option value="Grade 8-10">Grade 8-10</option>
+              <option value="Grade 11-12">Grade 11-12</option>
+            </select>
+            <select id="filter-topic" onchange="renderCatalogue()" class="p-1 border rounded bg-gray-50">
+              <option value="">All Topics</option>
+              <option value="Physics / Energy">Physics / Energy</option>
+              <option value="Hydraulics & Mechanics">Hydraulics & Mechanics</option>
+              <option value="Biology & Environment">Biology & Environment</option>
+            </select>
+          </div>
         </div>
 
-        <div class="flex justify-between items-center mb-2">
-          <h2 class="font-bold text-gray-700 text-xs uppercase tracking-wider">Shared Team Activities</h2>
-          <button onclick="navigateTo('editor')" class="text-xs text-blue-600 font-bold hover:underline">+ New Custom</button>
+        <div class="flex justify-between items-center">
+          <h2 class="font-bold text-gray-700 text-xs uppercase tracking-wider">STEM Activities</h2>
+          <button onclick="navigateTo('editor')" class="text-xs text-blue-600 font-bold hover:underline">+ New Plan</button>
         </div>
 
-        <!-- Catalogue Cards List -->
-        <div id="catalogue-list" class="space-y-3"></div>
+        <div id="catalogue-list" class="space-y-2"></div>
       </section>
 
-      <!-- 3. ACTIVITY DETAIL PAGE -->
+      <!-- 3. ACTIVITY DETAIL VIEW (FR-02) -->
       <section id="view-detail" class="hidden">
         <button onclick="navigateTo('catalogue')" class="text-xs text-blue-600 font-semibold mb-3 block">&larr; Back to Catalogue</button>
         <div id="detail-content"></div>
       </section>
 
-      <!-- 4. PLAN EDITOR PAGE (CREATE / EDIT) -->
-      <section id="view-editor" class="hidden">
-        <div class="flex justify-between items-center mb-3">
+      <!-- 4. SESSION PLAN EDITOR (FR-03 & QR-01) -->
+      <section id="view-editor" class="hidden space-y-3 text-xs">
+        <div class="flex justify-between items-center">
           <h2 class="font-bold text-gray-800 text-sm">Session Plan Creator</h2>
-          <span id="editor-status-tag" class="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-semibold">Central Database</span>
+          <span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-semibold">FR-03 Compliant</span>
         </div>
 
-        <form onsubmit="handleSavePlan(event)" class="space-y-3 text-xs">
+        <form onsubmit="handleSavePlan(event)" class="space-y-2.5">
           <div>
-            <label class="block font-semibold text-gray-700 mb-1">Activity / Lesson Title</label>
-            <input type="text" id="plan-title" required placeholder="e.g. Solar Water Heater Lab" class="w-full p-2 border rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-blue-500" />
+            <label class="block font-semibold text-gray-700">Lesson Title</label>
+            <input type="text" id="plan-title" required placeholder="e.g. Solar Water Heater Lab" class="w-full p-2 border rounded bg-white" />
           </div>
 
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block font-semibold text-gray-700 mb-1">Target Grade</label>
-              <select id="plan-grade" class="w-full p-2 border rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-blue-500">
+              <label class="block font-semibold text-gray-700">Grade Level</label>
+              <select id="plan-grade" class="w-full p-2 border rounded bg-white">
                 <option value="Grade 6-7">Grade 6-7</option>
                 <option value="Grade 8-10">Grade 8-10</option>
                 <option value="Grade 11-12">Grade 11-12</option>
               </select>
             </div>
             <div>
-              <label class="block font-semibold text-gray-700 mb-1">Duration (Mins)</label>
-              <input type="number" id="plan-duration" value="45" min="10" max="180" class="w-full p-2 border rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-blue-500" />
+              <label class="block font-semibold text-gray-700">Duration (Mins)</label>
+              <input type="number" id="plan-duration" value="45" class="w-full p-2 border rounded bg-white" />
             </div>
           </div>
 
           <div>
-            <label class="block font-semibold text-gray-700 mb-1">Topic Category</label>
-            <select id="plan-topic" class="w-full p-2 border rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-blue-500">
+            <label class="block font-semibold text-gray-700">Topic Category</label>
+            <select id="plan-topic" class="w-full p-2 border rounded bg-white">
               <option value="Physics / Energy">Physics / Energy</option>
               <option value="Hydraulics & Mechanics">Hydraulics & Mechanics</option>
               <option value="Biology & Environment">Biology & Environment</option>
@@ -116,28 +130,38 @@
           </div>
 
           <div>
-            <label class="block font-semibold text-gray-700 mb-1">Required Materials (comma separated)</label>
-            <input type="text" id="plan-materials" placeholder="Bottles, Tubing, Glue, Scissors" class="w-full p-2 border rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-blue-500" />
+            <label class="block font-semibold text-gray-700">Materials List (comma separated)</label>
+            <input type="text" id="plan-materials" placeholder="Plastic bottles, Tubing, Glue" class="w-full p-2 border rounded bg-white" />
           </div>
 
           <div>
-            <label class="block font-semibold text-gray-700 mb-1">Teacher Instructions / Notes</label>
-            <textarea id="plan-notes" rows="4" placeholder="Write step-by-step setup details..." class="w-full p-2 border rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"></textarea>
+            <label class="block font-semibold text-gray-700 text-red-600">⚠️ Safety Notes</label>
+            <textarea id="plan-safety" rows="2" placeholder="e.g. Exercise care when handling scissors..." class="w-full p-2 border rounded bg-white"></textarea>
           </div>
 
-          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-xs shadow transition mt-2">
-            ☁ Save & Broadcast to Team
+          <div>
+            <label class="block font-semibold text-gray-700 text-blue-600">💡 Inclusion Prompts</label>
+            <textarea id="plan-inclusion" rows="2" placeholder="e.g. Pair students with mixed abilities..." class="w-full p-2 border rounded bg-white"></textarea>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700">Setup Instructions & Timing</label>
+            <textarea id="plan-notes" rows="3" placeholder="Step-by-step facilitator plan..." class="w-full p-2 border rounded bg-white"></textarea>
+          </div>
+
+          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded text-xs shadow transition">
+            💾 Save Session Plan
           </button>
         </form>
       </section>
 
-      <!-- 5. ATTENDANCE COUNTER PAGE -->
+      <!-- 5. ATTENDANCE COUNTER (FR-04) -->
       <section id="view-counter" class="hidden h-full flex flex-col justify-center text-center">
-        <h2 class="font-bold text-gray-800 text-sm mb-1">Shared Attendance Tracker</h2>
-        <p class="text-xs text-gray-500 mb-6">Live central headcount tallies across all users.</p>
+        <h2 class="font-bold text-gray-800 text-sm mb-1">Aggregate Headcount Tracker</h2>
+        <p class="text-[11px] text-gray-500 mb-6">FR-04: No personal pupil data captured.</p>
 
-        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm max-w-[240px] mx-auto w-full">
-          <span class="text-xs text-gray-400 font-bold block uppercase tracking-wider mb-2">Live Headcount</span>
+        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm max-w-[220px] mx-auto w-full">
+          <span class="text-xs text-gray-400 font-bold block uppercase tracking-wider mb-2">Total Pupils</span>
           <div id="student-count" class="text-5xl font-black text-blue-600 mb-6">0</div>
 
           <div class="flex justify-center gap-4">
@@ -147,18 +171,35 @@
         </div>
       </section>
 
+      <!-- 6. SYNC QUEUE HUB & CONFLICT RESOLVER (FR-05) -->
+      <section id="view-sync" class="hidden space-y-3">
+        <div class="flex justify-between items-center">
+          <h2 class="font-bold text-gray-800 text-sm">Sync Queue & Conflicts</h2>
+          <button onclick="forceSyncQueue()" class="text-xs bg-blue-600 text-white font-bold px-2 py-1 rounded">Sync All</button>
+        </div>
+
+        <div id="sync-status-box" class="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900">
+          ⏳ <strong>Offline Queue:</strong> <span id="queue-count-text">0</span> items waiting to upload to central database.
+        </div>
+
+        <div id="queue-items-list" class="space-y-2"></div>
+      </section>
+
     </main>
 
-    <!-- App Bottom Navigation -->
-    <nav id="app-nav" class="hidden bg-white border-t border-gray-200 py-2 px-2 flex justify-around text-[10px] text-gray-500 z-10">
+    <!-- Bottom Navigation Bar -->
+    <nav id="app-nav" class="hidden bg-white border-t border-gray-200 py-2 px-1 flex justify-around text-[9px] text-gray-500 z-10">
       <button onclick="navigateTo('catalogue')" id="nav-catalogue" class="flex flex-col items-center font-semibold">
-        <span>📖</span> Shared Catalogue
+        <span>📖</span> Catalogue
       </button>
       <button onclick="navigateTo('editor')" id="nav-editor" class="flex flex-col items-center font-semibold">
-        <span>📝</span> Create/Edit
+        <span>📝</span> Plan Editor
       </button>
       <button onclick="navigateTo('counter')" id="nav-counter" class="flex flex-col items-center font-semibold">
-        <span>👥</span> Live Counter
+        <span>👥</span> Headcount
+      </button>
+      <button onclick="navigateTo('sync')" id="nav-sync" class="flex flex-col items-center font-semibold">
+        <span>🔄</span> Sync Hub
       </button>
       <button onclick="handleLogout()" class="flex flex-col items-center text-red-500 font-semibold">
         <span>🚪</span> Logout
@@ -167,9 +208,8 @@
 
   </div>
 
-  <!-- APPLICATION LOGIC & FIREBASE DATABASE -->
   <script>
-// --- STEP 1: CONFIGURE FIREBASE ---
+    // FIREBASE CONFIGURATION
     const firebaseConfig = {
       apiKey: "AIzaSyBEo2NAZu2Rj3lKWqI-Wbj8vNWkSE5RrK4",
       authDomain: "stemmate-prototype.firebaseapp.com",
@@ -181,50 +221,46 @@
       measurementId: "G-5S5T4EJYJ2"
     };
 
-    // Initialize Firebase
     let db;
     try {
       firebase.initializeApp(firebaseConfig);
       db = firebase.database();
     } catch (e) {
-      console.warn("Firebase initialized in fallback mode.", e);
+      console.warn("Offline mode active.");
     }
 
-    // --- APPLICATION STATE ---
     let state = {
       isLoggedIn: false,
       currentView: 'login',
       activities: [],
       attendance: 0,
+      offlineQueue: [],
       selectedActivityId: null
     };
 
-    // --- INITIALIZATION & REALTIME LISTENERS ---
+    // NETWORK & INITIALIZATION LISTENERS
     window.addEventListener('DOMContentLoaded', () => {
-      const savedAuth = localStorage.getItem('stem_auth');
+      state.offlineQueue = JSON.parse(localStorage.getItem('stem_queue') || '[]');
+      updateQueueBadge();
 
-      // Listen for Live Activity Updates from Firebase
       if (db) {
         db.ref('activities').on('value', (snapshot) => {
           const val = snapshot.val();
-          if (val) {
-            state.activities = Object.values(val);
-          } else {
-            // Seed initial data if database is empty
-            seedInitialDatabase();
-          }
+          if (val) state.activities = Object.values(val);
           if (state.currentView === 'catalogue') renderCatalogue();
         });
 
-        // Listen for Live Attendance Updates from Firebase
         db.ref('attendance').on('value', (snapshot) => {
-          const val = snapshot.val();
-          state.attendance = val !== null ? val : 0;
+          state.attendance = snapshot.val() || 0;
           if (state.currentView === 'counter') updateCounterUI();
         });
       }
 
-      if (savedAuth === 'true') {
+      window.addEventListener('online', updateNetworkBanner);
+      window.addEventListener('offline', updateNetworkBanner);
+      updateNetworkBanner();
+
+      if (localStorage.getItem('stem_auth') === 'true') {
         state.isLoggedIn = true;
         navigateTo('catalogue');
       } else {
@@ -232,38 +268,30 @@
       }
     });
 
-    function seedInitialDatabase() {
-      const initialData = {
-        'act-1': {
-          id: 'act-1',
-          title: 'Solar Water Heater',
-          grade: 'Grade 8-10',
-          duration: 45,
-          topic: 'Physics / Energy',
-          materials: ['2L Plastic bottles', 'Black matte paint', 'Clear plastic tubing (1m)'],
-          notes: 'Students build a thermal collector to demonstrate solar energy retention.',
-          isCustom: false
-        },
-        'act-2': {
-          id: 'act-2',
-          title: 'Cardboard Hydraulic Arm',
-          grade: 'Grade 6-7',
-          duration: 60,
-          topic: 'Hydraulics & Mechanics',
-          materials: ['Corrugated cardboard', 'Syringes (10ml x4)', 'Vinyl tubing', 'Water with dye'],
-          notes: 'Demonstrates Pascal\'s principle using closed hydraulic pressure systems.',
-          isCustom: false
-        }
-      };
-      if (db) db.ref('activities').set(initialData);
+    function updateNetworkBanner() {
+      const banner = document.getElementById('status-banner');
+      const text = document.getElementById('status-text');
+      if (navigator.onLine) {
+        banner.className = "bg-blue-600 text-white text-xs font-semibold px-3 py-1.5 flex items-center justify-between shadow-md z-20";
+        text.innerHTML = "🌐 Cloud Connected";
+      } else {
+        banner.className = "bg-amber-600 text-white text-xs font-semibold px-3 py-1.5 flex items-center justify-between shadow-md z-20";
+        text.innerHTML = "⚠️ Offline Mode - Local Storage Active";
+      }
     }
 
-    // --- NAVIGATION ---
+    function updateQueueBadge() {
+      const badge = document.getElementById('queue-badge');
+      badge.innerText = `Queue: ${state.offlineQueue.length}`;
+      document.getElementById('queue-count-text').innerText = state.offlineQueue.length;
+    }
+
+    // NAVIGATION ROUTER
     function navigateTo(viewId) {
       if (!state.isLoggedIn && viewId !== 'login') viewId = 'login';
       state.currentView = viewId;
 
-      ['login', 'catalogue', 'detail', 'editor', 'counter'].forEach(v => {
+      ['login', 'catalogue', 'detail', 'editor', 'counter', 'sync'].forEach(v => {
         document.getElementById(`view-${v}`).classList.add('hidden');
       });
 
@@ -280,7 +308,7 @@
         nav.classList.remove('hidden');
       }
 
-      ['catalogue', 'editor', 'counter'].forEach(tab => {
+      ['catalogue', 'editor', 'counter', 'sync'].forEach(tab => {
         const btn = document.getElementById(`nav-${tab}`);
         if (btn) {
           btn.className = (tab === viewId) 
@@ -291,10 +319,10 @@
 
       if (viewId === 'catalogue') renderCatalogue();
       if (viewId === 'counter') updateCounterUI();
-      if (viewId === 'editor' && !state.selectedActivityId) resetEditorForm();
+      if (viewId === 'sync') renderSyncQueue();
     }
 
-    // --- AUTHENTICATION ---
+    // AUTH
     function handleLogin(e) {
       e.preventDefault();
       state.isLoggedIn = true;
@@ -308,17 +336,22 @@
       navigateTo('login');
     }
 
-    // --- RENDER CATALOGUE ---
+    // CATALOGUE WITH MULTI-DIMENSIONAL FILTERS (FR-01)
     function renderCatalogue() {
       const container = document.getElementById('catalogue-list');
       const query = document.getElementById('search-input').value.toLowerCase();
+      const gradeFilter = document.getElementById('filter-grade').value;
+      const topicFilter = document.getElementById('filter-topic').value;
 
-      const filtered = state.activities.filter(act => 
-        act.title.toLowerCase().includes(query) || act.topic.toLowerCase().includes(query)
-      );
+      const filtered = state.activities.filter(act => {
+        const matchesQuery = act.title.toLowerCase().includes(query) || act.materials.join(' ').toLowerCase().includes(query);
+        const matchesGrade = !gradeFilter || act.grade === gradeFilter;
+        const matchesTopic = !topicFilter || act.topic === topicFilter;
+        return matchesQuery && matchesGrade && matchesTopic;
+      });
 
       if (filtered.length === 0) {
-        container.innerHTML = `<div class="text-center py-8 text-gray-400 text-xs">No shared activities found.</div>`;
+        container.innerHTML = `<div class="text-center py-8 text-gray-400 text-xs">No matching activities found.</div>`;
         return;
       }
 
@@ -330,102 +363,122 @@
           </div>
           <p class="text-[11px] text-gray-500 mt-1">${act.duration} mins • ${act.topic}</p>
           <div class="mt-2 text-blue-600 font-semibold text-[11px] flex items-center justify-between">
-            <span>View Details &rarr;</span>
-            <span class="text-[9px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-bold">Shared Cloud</span>
+            <span>View Full Plan &rarr;</span>
+            <span class="text-[9px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-bold">Cloud Synced</span>
           </div>
         </div>
       `).join('');
     }
 
-    // --- ACTIVITY DETAILS ---
     function openActivityDetail(id) {
       const act = state.activities.find(a => a.id === id);
       if (!act) return;
 
-      state.selectedActivityId = id;
-      const container = document.getElementById('detail-content');
+      document.getElementById('detail-content').innerHTML = `
+        <h2 class="font-bold text-gray-800 text-base">${act.title}</h2>
+        <div class="text-xs text-gray-500 mb-3">${act.grade} • ${act.duration} Mins • ${act.topic}</div>
 
-      container.innerHTML = `
-        <div class="flex justify-between items-start">
-          <h2 class="font-bold text-gray-800 text-base">${act.title}</h2>
-          <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">${act.grade}</span>
+        <div class="bg-white p-3 rounded-lg border border-gray-200 text-xs text-gray-700 space-y-2 mb-3">
+          <p><strong>Instructions:</strong> ${act.notes}</p>
+          ${act.safety ? `<p class="text-red-600"><strong>⚠️ Safety Notes:</strong> ${act.safety}</p>` : ''}
+          ${act.inclusion ? `<p class="text-blue-600"><strong>💡 Inclusion Prompts:</strong> ${act.inclusion}</p>` : ''}
         </div>
-        
-        <div class="text-xs text-gray-500 mt-1 mb-3">${act.duration} Minutes • ${act.topic}</div>
 
-        <p class="text-xs text-gray-700 leading-relaxed bg-white p-3 rounded-lg border border-gray-200 mb-3">${act.notes}</p>
-
-        <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg mb-4">
-          <h4 class="font-bold text-xs text-blue-900 mb-1">Required Materials:</h4>
-          <ul class="list-disc list-inside text-xs text-blue-800 space-y-0.5">
+        <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs mb-3">
+          <h4 class="font-bold text-blue-900 mb-1">Materials Required:</h4>
+          <ul class="list-disc list-inside text-blue-800">
             ${act.materials.map(m => `<li>${m}</li>`).join('')}
           </ul>
         </div>
-
-        <button onclick="editCurrentActivity('${act.id}')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-xs shadow transition">
-          ✏ Edit Central Activity
-        </button>
       `;
-
       navigateTo('detail');
     }
 
-    // --- CREATE & EDIT (SAVE TO FIREBASE) ---
-    function resetEditorForm() {
-      state.selectedActivityId = null;
-      document.getElementById('plan-title').value = '';
-      document.getElementById('plan-duration').value = '45';
-      document.getElementById('plan-materials').value = '';
-      document.getElementById('plan-notes').value = '';
-    }
-
-    function editCurrentActivity(id) {
-      const act = state.activities.find(a => a.id === id);
-      if (!act) return;
-
-      state.selectedActivityId = act.id;
-      document.getElementById('plan-title').value = act.title;
-      document.getElementById('plan-grade').value = act.grade;
-      document.getElementById('plan-duration').value = act.duration;
-      document.getElementById('plan-topic').value = act.topic;
-      document.getElementById('plan-materials').value = act.materials.join(', ');
-      document.getElementById('plan-notes').value = act.notes;
-
-      navigateTo('editor');
-    }
-
+    // SAVE PLAN WITH OFFLINE QUEUE (FR-03 & FR-05)
     function handleSavePlan(e) {
       e.preventDefault();
 
-      const id = state.selectedActivityId || 'act-' + Date.now();
-      const activityData = {
-        id,
+      const planData = {
+        id: 'act-' + Date.now(),
         title: document.getElementById('plan-title').value,
         grade: document.getElementById('plan-grade').value,
         duration: parseInt(document.getElementById('plan-duration').value, 10),
         topic: document.getElementById('plan-topic').value,
         materials: document.getElementById('plan-materials').value.split(',').map(m => m.trim()),
-        notes: document.getElementById('plan-notes').value,
-        isCustom: true
+        safety: document.getElementById('plan-safety').value,
+        inclusion: document.getElementById('plan-inclusion').value,
+        notes: document.getElementById('plan-notes').value
       };
 
-      // Save directly to Central Cloud Database
-      if (db) {
-        db.ref('activities/' + id).set(activityData);
+      if (navigator.onLine && db) {
+        db.ref('activities/' + planData.id).set(planData);
+      } else {
+        state.offlineQueue.push(planData);
+        localStorage.setItem('stem_queue', JSON.stringify(state.offlineQueue));
+        updateQueueBadge();
+        state.activities.push(planData); // Update local state immediately
       }
 
-      resetEditorForm();
       navigateTo('catalogue');
     }
 
-    // --- ATTENDANCE COUNTER (SYNC TO FIREBASE) ---
+    // ATTENDANCE TRACKER (FR-04)
     function adjustCounter(val) {
-      const newCount = Math.max(0, state.attendance + val);
-      if (db) db.ref('attendance').set(newCount);
+      state.attendance = Math.max(0, state.attendance + val);
+      if (navigator.onLine && db) db.ref('attendance').set(state.attendance);
+      updateCounterUI();
     }
 
     function updateCounterUI() {
       document.getElementById('student-count').innerText = state.attendance;
+    }
+
+    // SYNC HUB & CONFLICT RESOLUTION (FR-05)
+    function renderSyncQueue() {
+      const container = document.getElementById('queue-items-list');
+      if (state.offlineQueue.length === 0) {
+        container.innerHTML = `<div class="text-center py-6 text-gray-400 text-xs">No pending items in sync queue.</div>`;
+        return;
+      }
+
+      container.innerHTML = state.offlineQueue.map((item, idx) => `
+        <div class="p-3 bg-white border border-gray-200 rounded-lg text-xs space-y-1">
+          <div class="flex justify-between font-bold">
+            <span>${item.title}</span>
+            <span class="text-amber-600">Pending Upload</span>
+          </div>
+          <p class="text-gray-500">${item.grade} • ${item.topic}</p>
+          <div class="flex gap-2 mt-2">
+            <button onclick="resolveConflict(${idx}, 'upload')" class="bg-blue-600 text-white text-[10px] px-2 py-1 rounded font-bold">Push to Cloud</button>
+            <button onclick="resolveConflict(${idx}, 'discard')" class="bg-red-100 text-red-600 text-[10px] px-2 py-1 rounded font-bold">Discard</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function resolveConflict(index, action) {
+      if (action === 'upload' && db) {
+        db.ref('activities/' + state.offlineQueue[index].id).set(state.offlineQueue[index]);
+      }
+      state.offlineQueue.splice(index, 1);
+      localStorage.setItem('stem_queue', JSON.stringify(state.offlineQueue));
+      updateQueueBadge();
+      renderSyncQueue();
+    }
+
+    function forceSyncQueue() {
+      if (!navigator.onLine) {
+        alert("Cannot sync: Internet connection is offline.");
+        return;
+      }
+      state.offlineQueue.forEach(item => {
+        if (db) db.ref('activities/' + item.id).set(item);
+      });
+      state.offlineQueue = [];
+      localStorage.removeItem('stem_queue');
+      updateQueueBadge();
+      renderSyncQueue();
+      alert("All offline items synced to central cloud!");
     }
   </script>
 </body>
