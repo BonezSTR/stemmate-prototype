@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STEMMate - Activity Catalogue</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
+
+  <div class="w-full max-w-sm h-[750px] bg-white rounded-3xl shadow-2xl border-4 border-gray-800 flex flex-col overflow-hidden relative">
+    
+    <!-- Top Offline Banner -->
+    <div class="bg-amber-500 text-white text-xs font-semibold px-4 py-2 flex items-center justify-between shadow-md z-20">
+      <span>⚠ Offline - Saved Locally</span>
+      <span class="text-[10px] bg-amber-700 px-2 py-0.5 rounded">Low-Bandwidth</span>
+    </div>
+
+    <!-- Header -->
+    <div class="bg-blue-600 text-white px-4 py-3 flex justify-between items-center z-10">
+      <h1 class="font-bold text-lg tracking-wide">STEMMate</h1>
+      <a href="sync.html" class="text-xs bg-blue-700 hover:bg-blue-800 px-2.5 py-1 rounded-full font-medium">
+        Sync Queue (<span id="sync-count">1</span>)
+      </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto p-4 bg-gray-50 relative">
+      <div class="flex gap-2 mb-3">
+        <input type="text" placeholder="Search activities..." class="w-full px-3 py-2 border rounded-lg text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <button onclick="toggleFilterDrawer(true)" class="bg-blue-600 text-white px-3 py-2 rounded-lg text-sm font-semibold shadow hover:bg-blue-700">
+          Filter
+        </button>
+      </div>
+
+      <h2 class="font-bold text-gray-700 text-sm mb-2">Activities (Saved Offline)</h2>
+
+      <div class="space-y-3">
+        <a href="detail.html" class="block bg-white p-3 rounded-xl border border-gray-200 shadow-sm hover:border-blue-500 transition">
+          <div class="flex justify-between items-start">
+            <h3 class="font-bold text-gray-800 text-sm">Solar Water Heater</h3>
+            <span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded">Grade 8-10</span>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">45 mins • Thermal Energy & Recycled Bottles</p>
+          <div class="mt-2 text-blue-600 font-semibold text-xs flex items-center gap-1">
+            View Activity &rarr;
+          </div>
+        </a>
+
+        <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-sm opacity-80">
+          <div class="flex justify-between items-start">
+            <h3 class="font-bold text-gray-800 text-sm">Cardboard Hydraulic Arm</h3>
+            <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">Grade 6-9</span>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">60 mins • Hydraulics & Syringes</p>
+        </div>
+      </div>
+
+      <!-- Filter Drawer Overlay -->
+      <div id="filter-drawer" class="hidden absolute inset-0 bg-black/50 z-30 flex justify-end">
+        <div class="w-3/4 bg-white h-full p-4 flex flex-col justify-between shadow-xl">
+          <div>
+            <div class="flex justify-between items-center mb-4 border-b pb-2">
+              <h3 class="font-bold text-gray-800 text-base">Filter Activities</h3>
+              <button onclick="toggleFilterDrawer(false)" class="text-gray-500 font-bold text-lg">&times;</button>
+            </div>
+
+            <div class="space-y-4 text-xs text-gray-700">
+              <div>
+                <p class="font-bold mb-1 text-gray-800">Grade Level</p>
+                <label class="block"><input type="checkbox" checked /> Grade 6-7</label>
+                <label class="block"><input type="checkbox" checked /> Grade 8-10</label>
+              </div>
+              <div>
+                <p class="font-bold mb-1 text-gray-800">Duration</p>
+                <label class="block"><input type="checkbox" /> Under 30 mins</label>
+                <label class="block"><input type="checkbox" checked /> 30 - 60 mins</label>
+              </div>
+              <div>
+                <p class="font-bold mb-1 text-gray-800">Topic</p>
+                <label class="block"><input type="checkbox" checked /> Physics / Energy</label>
+                <label class="block"><input type="checkbox" /> Engineering Design</label>
+              </div>
+            </div>
+          </div>
+
+          <button onclick="toggleFilterDrawer(false)" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-xs shadow hover:bg-blue-700">
+            Apply Filters
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bg-white border-t border-gray-200 py-2 px-3 flex justify-around text-[10px] text-gray-500 z-10">
+      <a href="catalogue.html" class="flex flex-col items-center text-blue-600 font-semibold">
+        <span>📖</span> Catalogue
+      </a>
+      <a href="editor.html" class="flex flex-col items-center hover:text-blue-600 font-semibold">
+        <span>📝</span> Plan Editor
+      </a>
+      <a href="counter.html" class="flex flex-col items-center hover:text-blue-600 font-semibold">
+        <span>👥</span> Counter
+      </a>
+      <a href="sync.html" class="flex flex-col items-center hover:text-blue-600 font-semibold">
+        <span>🔄</span> Sync Hub
+      </a>
+      <a href="login.html" class="flex flex-col items-center text-red-500 font-semibold">
+        <span>🚪</span> Logout
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+    function toggleFilterDrawer(show) {
+      document.getElementById('filter-drawer').classList.toggle('hidden', !show);
+    }
+  </script>
+</body>
+</html>
