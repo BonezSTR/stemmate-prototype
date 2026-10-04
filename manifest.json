@@ -1,12 +1,10 @@
 {
   "name": "STEMMate Namibia",
   "short_name": "STEMMate",
-  "description": "Offline-First Facilitator Session Planner for STEM Education",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#1d4ed8",
   "theme_color": "#1d4ed8",
-  "orientation": "portrait",
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/3063/3063822.png",
