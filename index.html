@@ -169,16 +169,16 @@
 
   <!-- APPLICATION LOGIC & FIREBASE DATABASE -->
   <script>
-    // --- STEP 1: CONFIGURE FIREBASE ---
-    // (Replace the values below with your own project credentials from console.firebase.google.com)
+// --- STEP 1: CONFIGURE FIREBASE ---
     const firebaseConfig = {
-      apiKey: "AIzaSyDemoConfigKeyForTesting12345",
+      apiKey: "AIzaSyBEo2NAZu2Rj3lKWqI-Wbj8vNWkSE5RrK4",
       authDomain: "stemmate-prototype.firebaseapp.com",
       databaseURL: "https://stemmate-prototype-default-rtdb.firebaseio.com",
       projectId: "stemmate-prototype",
-      storageBucket: "stemmate-prototype.appspot.com",
-      messagingSenderId: "1234567890",
-      appId: "1:1234567890:web:abcdef123456"
+      storageBucket: "stemmate-prototype.firebasestorage.app",
+      messagingSenderId: "313547540743",
+      appId: "1:313547540743:web:c5e52a0b89ca1230d11da2",
+      measurementId: "G-5S5T4EJYJ2"
     };
 
     // Initialize Firebase
@@ -187,7 +187,7 @@
       firebase.initializeApp(firebaseConfig);
       db = firebase.database();
     } catch (e) {
-      console.warn("Firebase initialized in offline/fallback mode.");
+      console.warn("Firebase initialized in fallback mode.", e);
     }
 
     // --- APPLICATION STATE ---
