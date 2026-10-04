@@ -1,13 +1,13 @@
-const CACHE_NAME = 'stemmate-v1';
+const CACHE_NAME = 'stemmate-v2';
 const ASSETS_TO_CACHE = [
-  './index.html',
-  './manifest.json',
+  '/stemmate-prototype/',
+  '/stemmate-prototype/index.html',
+  '/stemmate-prototype/manifest.json',
   'https://cdn.tailwindcss.com',
   'https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js',
   'https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js'
 ];
 
-// Install event - Cache core layout & scripts
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -18,7 +18,6 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Activate event - Clean old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -30,7 +29,6 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch event - Serve from Cache first, fallback to Network
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
@@ -38,8 +36,7 @@ self.addEventListener('fetch', (event) => {
         return cachedResponse;
       }
       return fetch(event.request).catch(() => {
-        // Fallback for offline network failure
-        return caches.match('./index.html');
+        return caches.match('/stemmate-prototype/index.html');
       });
     })
   );
