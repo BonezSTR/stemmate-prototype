@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>STEMMate Prototype (Baseline Aligned)</title>
+
+  <!-- Progressive Web App (PWA) Manifest & Theme -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#1d4ed8" />
+
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Firebase SDKs -->
@@ -240,6 +245,13 @@
 
     // NETWORK & INITIALIZATION LISTENERS
     window.addEventListener('DOMContentLoaded', () => {
+      // Register PWA Service Worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Service Worker Registered:', reg))
+          .catch(err => console.error('Service Worker Registration Failed:', err));
+      }
+
       state.offlineQueue = JSON.parse(localStorage.getItem('stem_queue') || '[]');
       updateQueueBadge();
 
