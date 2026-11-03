@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>STEMMate Namibia - Offline Session Planner</title>
   <meta name="theme-color" content="#1d4ed8" />
-  <meta name="description" content="Offline-first STEM planning tool for facilitators in low-resource environments[cite: 1, 4]." />
+  <meta name="description" content="Offline-first STEM planning tool for facilitators in low-resource environments." />
   
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,7 +28,7 @@
 
   <div id="app-container" class="w-full max-w-md h-full sm:h-[840px] sm:max-h-[95vh] bg-white sm:rounded-3xl shadow-2xl sm:border-8 sm:border-slate-800 flex flex-col overflow-hidden relative">
     
-    <!-- Status Banner (Dual Status Bar - R8) -->
+    <!-- Status Banner (Dual Status Bar) -->
     <div id="status-banner" role="status" aria-live="polite" class="bg-blue-700 text-white text-xs font-semibold px-4 py-2 flex items-center justify-between shadow-sm z-30">
       <div class="flex items-center gap-2">
         <span id="status-icon">🌐</span>
@@ -59,12 +59,12 @@
           <div class="text-center space-y-2">
             <div class="w-16 h-16 bg-gradient-to-tr from-blue-700 to-indigo-600 text-white rounded-2xl flex items-center justify-center text-3xl font-black mx-auto shadow-xl ring-4 ring-blue-100">⚡</div>
             <h2 class="font-bold text-slate-900 text-2xl tracking-tight">STEMMate Namibia</h2>
-            <p class="text-xs text-slate-500 max-w-[260px] mx-auto">Offline-First Facilitator Tool[cite: 1, 4]</p>
+            <p class="text-xs text-slate-500 max-w-[260px] mx-auto">Offline-First Facilitator Tool</p>
           </div>
 
           <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl text-xs text-emerald-950 shadow-sm">
-            <strong class="font-bold block">🛡️ Privacy Protected (Requirement R9)[cite: 1]</strong>
-            <p class="text-[11px] text-emerald-800 mt-0.5">No learner personal information is requested or stored[cite: 1]. Synthetic IDs only[cite: 1].</p>
+            <strong class="font-bold block">🛡️ Privacy Protected</strong>
+            <p class="text-[11px] text-emerald-800 mt-0.5">No learner personal information is requested or stored. Synthetic IDs only.</p>
           </div>
 
           <div id="auth-error-banner" class="hidden p-3 bg-red-50 border-l-4 border-red-600 rounded-r-xl text-xs text-red-900 font-medium" role="alert"></div>
@@ -89,7 +89,7 @@
         </div>
       </section>
 
-      <!-- 2. CATALOGUE VIEW & MATERIAL FILTERING (E1) -->
+      <!-- 2. CATALOGUE VIEW & MATERIAL FILTERING -->
       <section id="view-catalogue" class="hidden space-y-3">
         <div class="bg-white p-3 border border-slate-200 rounded-2xl shadow-sm space-y-2.5">
           <input type="text" id="search-input" oninput="STEMMate.catalogue.render()" placeholder="🔍 Filter by title or materials (e.g. bottle)..." class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600" />
@@ -110,7 +110,7 @@
         </div>
 
         <div class="flex justify-between items-center px-1">
-          <h2 class="font-bold text-slate-800 text-xs uppercase tracking-wider">STEM Activities (Evidence E1)[cite: 5]</h2>
+          <h2 class="font-bold text-slate-800 text-xs uppercase tracking-wider">STEM Activities</h2>
           <button onclick="STEMMate.router.navigate('editor')" class="text-xs bg-blue-50 text-blue-700 border border-blue-200 font-bold px-2.5 py-1 rounded-lg hover:bg-blue-100">+ New Plan</button>
         </div>
 
@@ -123,12 +123,12 @@
         <div id="detail-content" class="bg-white p-4 border border-slate-200 rounded-2xl shadow-sm space-y-3"></div>
       </section>
 
-      <!-- 4. SESSION PLAN CREATOR (Mandatory Safety R3 & Autosave R4) -->
+      <!-- 4. SESSION PLAN CREATOR -->
       <section id="view-editor" class="hidden space-y-3 text-xs">
         <div class="flex justify-between items-center border-b border-slate-200 pb-2">
           <div>
             <h2 class="font-bold text-slate-800 text-sm">Session Plan Creator</h2>
-            <p class="text-[10px] text-slate-500">Auto-saves locally as draft (Requirement R4)[cite: 1]</p>
+            <p class="text-[10px] text-slate-500">Auto-saves locally as draft</p>
           </div>
           <span id="draft-status-tag" class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full font-bold">Draft Ready</span>
         </div>
@@ -174,7 +174,7 @@
           </div>
 
           <div>
-            <label for="plan-safety" class="block font-bold text-red-700 mb-1">⚠️ Safety Notes <span class="text-red-600">* Mandatory (R3)[cite: 1]</span></label>
+            <label for="plan-safety" class="block font-bold text-red-700 mb-1">⚠️ Safety Notes <span class="text-red-600">* Mandatory</span></label>
             <textarea id="plan-safety" rows="2" oninput="STEMMate.editor.autoSaveDraft()" placeholder="Mandatory safety instructions..." class="w-full p-2.5 border border-red-200 bg-red-50/30 rounded-xl focus:ring-2 focus:ring-red-600"></textarea>
           </div>
 
@@ -190,7 +190,7 @@
 
           <div class="flex gap-2 pt-2">
             <button type="submit" class="flex-1 bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">
-              💾 Save Plan & Queue (R5)[cite: 1]
+              💾 Save Plan & Queue
             </button>
             <button type="button" onclick="STEMMate.editor.clearDraft()" class="px-3 py-3 bg-slate-200 text-slate-700 font-bold rounded-xl text-xs">
               Clear
@@ -199,11 +199,11 @@
         </form>
       </section>
 
-      <!-- 5. AGGREGATE HEADCOUNT TRACKER (R9 Privacy Compliant) -->
+      <!-- 5. AGGREGATE HEADCOUNT TRACKER -->
       <section id="view-counter" class="hidden h-full flex flex-col justify-center text-center py-4">
         <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm max-w-[280px] mx-auto w-full space-y-4">
           <h2 class="font-bold text-slate-800 text-sm">Aggregate Headcount Tracker</h2>
-          <p class="text-[10px] text-slate-500">No pupil PII stored (R9)[cite: 1]</p>
+          <p class="text-[10px] text-slate-500">No pupil PII stored</p>
           <div class="py-4 bg-slate-50 rounded-2xl border border-slate-100">
             <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest block mb-1">Total Pupils</span>
             <div id="student-count" class="text-6xl font-black text-blue-700">0</div>
@@ -215,10 +215,10 @@
         </div>
       </section>
 
-      <!-- 6. SYNC QUEUE HUB (R5) -->
+      <!-- 6. SYNC QUEUE HUB -->
       <section id="view-sync" class="hidden space-y-3">
         <div class="flex justify-between items-center border-b border-slate-200 pb-2">
-          <h2 class="font-bold text-slate-800 text-sm">Sync Queue & Conflicts (R5)[cite: 1]</h2>
+          <h2 class="font-bold text-slate-800 text-sm">Sync Queue & Conflicts</h2>
           <button onclick="STEMMate.sync.forceSyncAll()" class="text-xs bg-blue-700 text-white font-bold px-3 py-1.5 rounded-lg shadow-sm">Sync All Now</button>
         </div>
         <div id="queue-items-list" class="space-y-2.5"></div>
@@ -239,12 +239,12 @@
 
   </div>
 
-  <!-- Shared Device Sign-Out Safety Modal (Requirement R10)[cite: 1] -->
+  <!-- Shared Device Sign-Out Safety Modal -->
   <div id="signout-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl p-5 max-w-xs w-full shadow-2xl space-y-4">
       <div class="text-center">
         <h3 class="font-bold text-slate-900 text-sm">Sign Out & Clear Shared Device?</h3>
-        <p class="text-xs text-slate-500 mt-1">Clears local plans and drafts so the next facilitator on this shared device sees no previous work (R10)[cite: 1].</p>
+        <p class="text-xs text-slate-500 mt-1">Clears local plans and drafts so the next facilitator on this shared device sees no previous work.</p>
       </div>
       <div id="modal-unsynced-warning" class="hidden p-2 bg-red-50 border border-red-200 rounded-lg text-[11px] text-red-800 font-bold text-center">
         ⚠️ Warning: You have unsynced plans in queue!
@@ -260,7 +260,7 @@
     (function () {
       'use strict';
 
-      // PRE-CONFIGURED SYNTHETIC USERS (R9/R10)[cite: 1]
+      // PRE-CONFIGURED SYNTHETIC USERS
       const SYNTHETIC_USERS = {
         'FCI-KOMAS-01': { name: 'Facilitator Khomas Region', pin: '1234' },
         'FCI-ERONGO-02': { name: 'Facilitator Erongo Region', pin: '5678' }
@@ -323,7 +323,7 @@
         state.offlineQueue = [];
         state.draftPlan = null;
         
-        // WIPE LOCAL STORAGE TO PREVENT CROSS-USER DATA LEAKAGE (R10)[cite: 1]
+        // WIPE LOCAL STORAGE TO PREVENT CROSS-USER DATA LEAKAGE
         localStorage.clear();
 
         document.getElementById('signout-modal').classList.add('hidden');
@@ -339,7 +339,7 @@
 
         const errors = [];
         if (!title || title.length < 5) errors.push("Lesson Title must be at least 5 characters.");
-        if (!safety) errors.push("Safety Notes are mandatory for STEM activities (Requirement R3)[cite: 1].");
+        if (!safety) errors.push("Safety Notes are mandatory for STEM activities.");
         if (isNaN(duration) || duration < 10 || duration > 180) errors.push("Duration must be between 10 and 180 minutes.");
 
         const errorSummary = document.getElementById('editor-error-summary');
@@ -369,7 +369,7 @@
         };
 
         state.activities.unshift(newPlan);
-        state.offlineQueue.push(newPlan);
+        state.offlineQueue.unshift(newPlan);
 
         localStorage.setItem('stem_activities', JSON.stringify(state.activities));
         localStorage.setItem('stem_queue', JSON.stringify(state.offlineQueue));
@@ -463,6 +463,16 @@
 
       function renderSyncQueue() {
         const container = document.getElementById('queue-items-list');
+        const badge = document.getElementById('queue-badge');
+        const dot = document.getElementById('nav-queue-dot');
+
+        badge.textContent = `Sync Queue: ${state.offlineQueue.length}`;
+        if (state.offlineQueue.length > 0) {
+          dot.classList.remove('hidden');
+        } else {
+          dot.classList.add('hidden');
+        }
+
         if (state.offlineQueue.length === 0) {
           container.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs bg-white rounded-xl border border-slate-200">Sync queue empty. All items synced.</div>`;
           return;
@@ -501,6 +511,7 @@
       function init() {
         state.activities = JSON.parse(localStorage.getItem('stem_activities') || 'null') || INITIAL_ACTIVITIES;
         state.offlineQueue = JSON.parse(localStorage.getItem('stem_queue') || '[]');
+        renderSyncQueue(); // Initial update for queue indicator
         if (localStorage.getItem('stem_auth') === 'true') {
           state.isLoggedIn = true;
           state.facilitatorId = localStorage.getItem('stem_fac_id');
