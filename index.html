@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-100">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STEMMate Namibia - Facilitator Offline Session Planner</title>
+  
+  <!-- PWA Theme Color & Manifest Link -->
+  <meta name="theme-color" content="#1d4ed8" />
+  <meta name="description" content="Offline-first STEM planning tool for facilitators in low-resource environments." />
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    
+    /* Accessibility Focus Style (WCAG 2.2 AA) */
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 3px solid #2563eb !important;
+      outline-offset: 2px !important;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="h-full flex flex-col justify-center items-center p-0 sm:p-4 text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- Accessible Skip Link -->
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-700 focus:text-white focus:rounded-lg focus:shadow-lg focus:font-bold text-xs">
+    Skip to main content
+  </a>
+
+  <!-- Container Wrapper (Supports Mobile Frame View & Expanded View) -->
+  <div id="app-container" class="w-full max-w-md h-full sm:h-[840px] sm:max-h-[95vh] bg-white sm:rounded-3xl shadow-2xl sm:border-8 sm:border-slate-800 flex flex-col overflow-hidden relative transition-all duration-300">
+    
+    <!-- Top System Dual Status Banner (WCAG R8 Non-Color Dependent + Text) -->
+    <div id="status-banner" role="status" aria-live="polite" class="bg-blue-700 text-white text-xs font-semibold px-4 py-2 flex items-center justify-between shadow-sm z-30 transition-colors duration-200">
+      <div class="flex items-center gap-2">
+        <span id="status-icon" class="text-sm" aria-hidden="true">🌐</span>
+        <span id="status-text" class="text-[11px] sm:text-xs">Cloud Connected</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="queue-badge" class="text-[10px] bg-blue-900 text-blue-100 px-2 py-0.5 rounded-full font-bold border border-blue-400/30">
+          Sync Queue: 0
+        </span>
+        <button onclick="STEMMate.ui.toggleViewMode()" title="Toggle Desktop/Mobile View" class="text-xs hover:bg-blue-800 p-1 rounded focus:ring-1 focus:ring-white" aria-label="Toggle full screen view">
+          📱 / 🖥️
+        </button>
+      </div>
+    </div>
+
+    <!-- App Header -->
+    <header id="app-header" class="hidden bg-slate-900 text-white px-4 py-3 flex justify-between items-center z-20 border-b border-slate-800 shadow-sm">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 bg-blue-600 rounded-lg flex items-center justify-center font-black text-sm">⚡</div>
+        <h1 class="font-bold text-base tracking-tight text-white">STEMMate <span class="text-xs text-blue-400 font-normal">Namibia</span></h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="user-display-id" class="text-[10px] bg-slate-800 text-slate-300 px-2 py-1 rounded font-mono border border-slate-700">ID: Guest</span>
+      </div>
+    </header>
+
+    <!-- MAIN VIEW CONTAINER -->
+    <main id="main-content" class="flex-1 overflow-y-auto p-4 bg-slate-50 relative focus:outline-none" tabindex="-1">
+
+      <!-- 1. LOGIN & SYNTHETIC ID SESSION PAGE (R10 & R9) -->
+      <section id="view-login" class="h-full flex flex-col justify-between py-2">
+        <div class="my-auto space-y-6">
+          <div class="text-center space-y-2">
+            <div class="w-16 h-16 bg-gradient-to-tr from-blue-700 to-indigo-600 text-white rounded-2xl flex items-center justify-center text-3xl font-black mx-auto shadow-xl ring-4 ring-blue-100">⚡</div>
+            <h2 class="font-bold text-slate-900 text-2xl tracking-tight">STEMMate Namibia</h2>
+            <p class="text-xs text-slate-500 max-w-[250px] mx-auto">Offline-First Session Planner for Adult STEM Facilitators</p>
+          </div>
+
+          <!-- Privacy Shield Notice -->
+          <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl text-xs text-emerald-900 flex items-start gap-2.5 shadow-sm">
+            <span class="text-lg leading-none" aria-hidden="true">🛡️</span>
+            <div>
+              <strong class="font-bold block text-emerald-950">Privacy Protected (Requirement R9)</strong>
+              <p class="text-[11px] text-emerald-800 mt-0.5 leading-relaxed">No pupil names, personal details, or sensitive IDs are ever requested or stored locally/online.</p>
+            </div>
+          </div>
+
+          <form id="login-form" onsubmit="STEMMate.auth.handleLogin(event)" class="space-y-3.5 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <div>
+              <label for="login-school" class="block text-xs font-bold text-slate-700 mb-1">Synthetic Facilitator ID / Region Code</label>
+              <input type="text" id="login-school" value="FAC-NAM-704" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition" placeholder="e.g. FAC-KHOMAS-01" />
+            </div>
+            <div>
+              <label for="login-pin" class="block text-xs font-bold text-slate-700 mb-1">Facilitator Passcode</label>
+              <input type="password" id="login-pin" value="1234" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition" placeholder="••••" />
+            </div>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3 rounded-xl text-xs shadow-md transition-all transform active:scale-[0.99] flex items-center justify-center gap-2">
+              <span>Start Planning Session</span>
+              <span aria-hidden="true">&rarr;</span>
+            </button>
+          </form>
+        </div>
+
+        <div class="text-center text-[10px] text-slate-400 mt-4">
+          NSSDL Sustainable Software Project • Version 0.2 (Offline-First)
+        </div>
+      </section>
+
+      <!-- 2. CATALOGUE & FILTER PAGE (R1) -->
+      <section id="view-catalogue" class="hidden space-y-3">
+        <!-- Search and Filters Box -->
+        <div class="bg-white p-3 border border-slate-200 rounded-2xl shadow-sm space-y-2.5">
+          <div>
+            <label for="search-input" class="sr-only">Search activities</label>
+            <input type="text" id="search-input" oninput="STEMMate.catalogue.render()" placeholder="🔍 Search title or materials..." class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600" />
+          </div>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div>
+              <label for="filter-grade" class="sr-only">Filter by Grade</label>
+              <select id="filter-grade" onchange="STEMMate.catalogue.render()" class="w-full p-2 border border-slate-200 rounded-lg bg-slate-50 font-medium text-slate-700 focus:ring-2 focus:ring-blue-600">
+                <option value="">All Grades</option>
+                <option value="Grade 6-7">Grade 6-7</option>
+                <option value="Grade 8-10">Grade 8-10</option>
+                <option value="Grade 11-12">Grade 11-12</option>
+              </select>
+            </div>
+            <div>
+              <label for="filter-topic" class="sr-only">Filter by Topic</label>
+              <select id="filter-topic" onchange="STEMMate.catalogue.render()" class="w-full p-2 border border-slate-200 rounded-lg bg-slate-50 font-medium text-slate-700 focus:ring-2 focus:ring-blue-600">
+                <option value="">All Topics</option>
+                <option value="Physics & Energy">Physics & Energy</option>
+                <option value="Hydraulics & Mechanics">Hydraulics & Mechanics</option>
+                <option value="Environment & Bio">Environment & Bio</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center px-1">
+          <h2 class="font-bold text-slate-800 text-xs uppercase tracking-wider">Available STEM Activities</h2>
+          <button onclick="STEMMate.router.navigate('editor')" class="text-xs bg-blue-50 text-blue-700 border border-blue-200 font-bold px-2.5 py-1 rounded-lg hover:bg-blue-100 transition">
+            + Custom Plan
+          </button>
+        </div>
+
+        <!-- Activity List Container -->
+        <div id="catalogue-list" class="space-y-2.5">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+      <!-- 3. ACTIVITY DETAIL VIEW (R2, R6) -->
+      <section id="view-detail" class="hidden space-y-3">
+        <button onclick="STEMMate.router.navigate('catalogue')" class="inline-flex items-center text-xs text-blue-700 font-bold hover:underline mb-1">
+          &larr; Back to Activity Catalogue
+        </button>
+        <div id="detail-content" class="bg-white p-4 border border-slate-200 rounded-2xl shadow-sm space-y-3">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+      <!-- 4. SESSION PLAN CREATOR (R3, R4, R8 Validation) -->
+      <section id="view-editor" class="hidden space-y-3 text-xs">
+        <div class="flex justify-between items-center border-b border-slate-200 pb-2">
+          <div>
+            <h2 class="font-bold text-slate-800 text-sm">Session Plan Creator</h2>
+            <p class="text-[10px] text-slate-500">Auto-saves locally as draft while editing (R4)</p>
+          </div>
+          <span id="draft-status-tag" class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full font-bold">
+            Draft Restored
+          </span>
+        </div>
+
+        <!-- Error Summary Banner (Validation Guardrail R3) -->
+        <div id="editor-error-summary" class="hidden p-3 bg-red-50 border-l-4 border-red-600 rounded-r-xl text-xs text-red-900 space-y-1" role="alert" tabindex="-1">
+          <strong class="font-bold block flex items-center gap-1 text-red-950">
+            <span>⚠️</span> Please fix the missing or invalid fields:
+          </strong>
+          <ul id="error-summary-list" class="list-disc list-inside text-[11px] space-y-0.5 text-red-800"></ul>
+        </div>
+
+        <form id="plan-form" onsubmit="STEMMate.editor.handleSave(event)" class="space-y-3">
+          <div>
+            <label for="plan-title" class="block font-bold text-slate-700 mb-1">Lesson Title <span class="text-red-600">*</span></label>
+            <input type="text" id="plan-title" oninput="STEMMate.editor.autoSaveDraft()" placeholder="e.g. Solar Water Purification Lab" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-600" />
+            <span id="err-title" class="hidden text-[10px] text-red-600 font-bold mt-1 block">Title is required.</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label for="plan-grade" class="block font-bold text-slate-700 mb-1">Grade Level <span class="text-red-600">*</span></label>
+              <select id="plan-grade" onchange="STEMMate.editor.autoSaveDraft()" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-600">
+                <option value="Grade 6-7">Grade 6-7</option>
+                <option value="Grade 8-10" selected>Grade 8-10</option>
+                <option value="Grade 11-12">Grade 11-12</option>
+              </select>
+            </div>
+            <div>
+              <label for="plan-duration" class="block font-bold text-slate-700 mb-1">Duration (Mins) <span class="text-red-600">*</span></label>
+              <input type="number" id="plan-duration" value="45" min="10" max="180" oninput="STEMMate.editor.autoSaveDraft()" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-600" />
+            </div>
+          </div>
+
+          <div>
+            <label for="plan-topic" class="block font-bold text-slate-700 mb-1">Topic Category <span class="text-red-600">*</span></label>
+            <select id="plan-topic" onchange="STEMMate.editor.autoSaveDraft()" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-600">
+              <option value="Physics & Energy">Physics & Energy</option>
+              <option value="Hydraulics & Mechanics">Hydraulics & Mechanics</option>
+              <option value="Environment & Bio">Environment & Bio</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="plan-materials" class="block font-bold text-slate-700 mb-1">Materials List (Comma-separated)</label>
+            <input type="text" id="plan-materials" oninput="STEMMate.editor.autoSaveDraft()" placeholder="Plastic bottles, charcoal, sand, clear plastic wrap" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-600" />
+          </div>
+
+          <!-- Mandatory Safety Notes (R3 Core Requirement) -->
+          <div>
+            <label for="plan-safety" class="block font-bold text-red-700 mb-1 flex items-center justify-between">
+              <span>⚠️ Safety Notes <span class="text-red-600">* Mandatory</span></span>
+            </label>
+            <textarea id="plan-safety" rows="2" oninput="STEMMate.editor.autoSaveDraft()" placeholder="e.g., Exercise caution with boiling water. Wear safety glasses..." class="w-full p-2.5 border border-red-200 bg-red-50/30 rounded-xl focus:ring-2 focus:ring-red-600 focus:bg-white"></textarea>
+            <span id="err-safety" class="hidden text-[10px] text-red-600 font-bold mt-1 block">Safety notes are mandatory for STEM activities.</span>
+          </div>
+
+          <div>
+            <label for="plan-inclusion" class="block font-bold text-blue-800 mb-1">💡 Inclusion & Differentiation Prompts</label>
+            <textarea id="plan-inclusion" rows="2" oninput="STEMMate.editor.autoSaveDraft()" placeholder="e.g., Pair students with varied learning preferences..." class="w-full p-2.5 border border-blue-200 bg-blue-50/20 rounded-xl focus:ring-2 focus:ring-blue-600"></textarea>
+          </div>
+
+          <div>
+            <label for="plan-notes" class="block font-bold text-slate-700 mb-1">Step-by-Step Instructions & Timings</label>
+            <textarea id="plan-notes" rows="3" oninput="STEMMate.editor.autoSaveDraft()" placeholder="1. Introduction (10 mins)... 2. Hands-on build (25 mins)..." class="w-full p-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-600"></textarea>
+          </div>
+
+          <div class="flex gap-2 pt-2">
+            <button type="submit" class="flex-1 bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">
+              💾 Save Session Plan
+            </button>
+            <button type="button" onclick="STEMMate.editor.clearDraft()" class="px-3 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs">
+              Clear
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 5. ATTENDANCE TRACKER (R9 Strict Aggregate Headcount) -->
+      <section id="view-counter" class="hidden h-full flex flex-col justify-center text-center py-4">
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm max-w-[280px] mx-auto w-full space-y-4">
+          <div>
+            <h2 class="font-bold text-slate-800 text-sm">Aggregate Headcount Tracker</h2>
+            <p class="text-[10px] text-slate-500 mt-0.5">Privacy-Safe (R9 Compliant)</p>
+          </div>
+
+          <div class="py-4 bg-slate-50 rounded-2xl border border-slate-100">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest block mb-1">Total Pupils Attending</span>
+            <div id="student-count" class="text-6xl font-black text-blue-700 tracking-tight">0</div>
+          </div>
+
+          <div class="flex justify-center items-center gap-4 pt-2">
+            <button onclick="STEMMate.counter.adjust(-1)" class="w-14 h-14 bg-red-100 text-red-700 hover:bg-red-200 active:scale-95 rounded-2xl font-black text-2xl border border-red-200 transition shadow-sm" aria-label="Decrease headcount by 1">
+              -
+            </button>
+            <button onclick="STEMMate.counter.adjust(1)" class="w-14 h-14 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 active:scale-95 rounded-2xl font-black text-2xl border border-emerald-200 transition shadow-sm" aria-label="Increase headcount by 1">
+              +
+            </button>
+          </div>
+
+          <div class="text-[10px] text-slate-400 italic">
+            Counts are queued locally and synced in aggregate.
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. SYNC QUEUE HUB & CONFLICT RESOLVER (R5) -->
+      <section id="view-sync" class="hidden space-y-3">
+        <div class="flex justify-between items-center border-b border-slate-200 pb-2">
+          <div>
+            <h2 class="font-bold text-slate-800 text-sm">Sync Queue & Conflicts</h2>
+            <p class="text-[10px] text-slate-500">Manage offline queued plans (R5)</p>
+          </div>
+          <button onclick="STEMMate.sync.forceSyncAll()" class="text-xs bg-blue-700 hover:bg-blue-800 text-white font-bold px-3 py-1.5 rounded-lg shadow-sm transition">
+            Sync All Now
+          </button>
+        </div>
+
+        <div id="sync-summary-box" class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-base">⏳</span>
+            <div>
+              <strong class="block font-bold">Pending Offline Items</strong>
+              <span id="queue-summary-text" class="text-[11px] text-amber-800">0 plans waiting for connection.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sync Items Queue List -->
+        <div id="queue-items-list" class="space-y-2.5">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar (WCAG Touch Targets > 48px) -->
+    <nav id="app-nav" class="hidden bg-white border-t border-slate-200 py-1.5 px-2 flex justify-around text-[10px] text-slate-500 z-20 shadow-lg">
+      <button onclick="STEMMate.router.navigate('catalogue')" id="nav-catalogue" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50">
+        <span class="text-base" aria-hidden="true">📖</span>
+        <span>Catalogue</span>
+      </button>
+      <button onclick="STEMMate.router.navigate('editor')" id="nav-editor" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50">
+        <span class="text-base" aria-hidden="true">📝</span>
+        <span>Plan Creator</span>
+      </button>
+      <button onclick="STEMMate.router.navigate('counter')" id="nav-counter" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50">
+        <span class="text-base" aria-hidden="true">👥</span>
+        <span>Headcount</span>
+      </button>
+      <button onclick="STEMMate.router.navigate('sync')" id="nav-sync" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50 relative">
+        <span class="text-base" aria-hidden="true">🔄</span>
+        <span>Sync Hub</span>
+        <span id="nav-queue-dot" class="hidden absolute top-1.5 right-4 w-2 h-2 bg-amber-500 rounded-full"></span>
+      </button>
+      <button onclick="STEMMate.auth.confirmSignOut()" id="nav-logout" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold text-red-600 rounded-lg hover:bg-red-50">
+        <span class="text-base" aria-hidden="true">🚪</span>
+        <span>Sign Out</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- Sign Out Warning Modal (R10 Shared Device Protection) -->
+  <div id="signout-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl p-5 max-w-xs w-full shadow-2xl border border-slate-100 space-y-4">
+      <div class="text-center">
+        <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-2">⚠️</div>
+        <h3 class="font-bold text-slate-900 text-sm">Sign Out & Clear Shared Device?</h3>
+        <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+          Unsynced work will be cleared from this device to protect privacy for the next facilitator.
+        </p>
+      </div>
+      <div id="modal-unsynced-warning" class="hidden p-2 bg-red-50 border border-red-200 rounded-lg text-[11px] text-red-800 font-bold text-center">
+        ⚠️ You have unsynced plans in queue!
+      </div>
+      <div class="flex gap-2">
+        <button onclick="STEMMate.auth.executeSignOut()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl text-xs transition">
+          Clear & Sign Out
+        </button>
+        <button onclick="document.getElementById('signout-modal').classList.add('hidden')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICATION LOGIC -->
+  <script>
+    /**
+     * STEMMate Namibia - Core Standalone Engine
+     * Baseline Aligned v0.2
+     */
+    (function () {
+      'use strict';
+
+      // Default Baseline Synthetic STEM Activities
+      const INITIAL_ACTIVITIES = [
+        {
+          id: 'act-001',
+          title: 'Solar Water Heater Model',
+          grade: 'Grade 8-10',
+          duration: 45,
+          topic: 'Physics & Energy',
+          materials: ['Plastic bottle', 'Black tape', 'Clear tubing', 'Water'],
+          safety: 'Take care with sharp scissors during tubing cuts.',
+          inclusion: 'Pair students for physical assembly assistance.',
+          notes: '1. Demonstrate heat absorption (10m). 2. Construct collector loop (25m). 3. Measure temp change (10m).'
+        },
+        {
+          id: 'act-002',
+          title: 'Hydraulic Arm Mechanism',
+          grade: 'Grade 11-12',
+          duration: 60,
+          topic: 'Hydraulics & Mechanics',
+          materials: ['Syringes (10ml)', 'Cardboard', 'Plastic tubing', 'Water', 'Hot glue'],
+          safety: 'Hot glue gun safety: adult supervision required.',
+          inclusion: 'Provide pre-cut cardboard templates if time is limited.',
+          notes: '1. Explain Pascal\'s law (15m). 2. Assemble hydraulic syringe link (30m). 3. Testing weight limits (15m).'
+        },
+        {
+          id: 'act-003',
+          title: 'Local Water Filtration Column',
+          grade: 'Grade 6-7',
+          duration: 30,
+          topic: 'Environment & Bio',
+          materials: ['Sand', 'Gravel', 'Charcoal', 'Cut bottle', 'Turbid water sample'],
+          safety: 'Filtered water is NOT safe for drinking testing.',
+          inclusion: 'Tactile identification of sand/gravel grain sizes.',
+          notes: '1. Layer charcoal, sand, and gravel (10m). 2. Pour sample and log turbidity reduction (20m).'
+        }
+      ];
+
+      // Application State
+      const state = {
+        isLoggedIn: false,
+        facilitatorId: 'FAC-NAM-704',
+        currentView: 'login',
+        activities: [],
+        attendance: 0,
+        offlineQueue: [],
+        draftPlan: null,
+        isOnline: navigator.onLine,
+        isFullScreen: false
+      };
+
+      function registerSW() {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('[PWA] External Service Worker Active:', reg))
+            .catch(err => console.warn('[PWA] SW Registration Error:', err));
+        }
+      }
+
+      // Network & UI Banner Sync
+      function updateNetworkStatus() {
+        state.isOnline = navigator.onLine;
+        const banner = document.getElementById('status-banner');
+        const icon = document.getElementById('status-icon');
+        const text = document.getElementById('status-text');
+
+        if (state.isOnline) {
+          banner.className = "bg-blue-700 text-white text-xs font-semibold px-4 py-2 flex items-center justify-between shadow-sm z-30 transition-colors duration-200";
+          icon.textContent = "🌐";
+          text.textContent = "Cloud Connected";
+        } else {
+          banner.className = "bg-amber-600 text-white text-xs font-semibold px-4 py-2 flex items-center justify-between shadow-sm z-30 transition-colors duration-200";
+          icon.textContent = "⚠️";
+          text.textContent = "Offline Mode - Saved Local";
+        }
+      }
+
+      function updateQueueBadges() {
+        const badge = document.getElementById('queue-badge');
+        const countText = document.getElementById('queue-summary-text');
+        const navDot = document.getElementById('nav-queue-dot');
+        const count = state.offlineQueue.length;
+
+        badge.textContent = `Sync Queue: ${count}`;
+        if (countText) {
+          countText.textContent = `${count} session plan(s) queued for synchronization.`;
+        }
+
+        if (count > 0) {
+          badge.className = "text-[10px] bg-amber-900 text-amber-200 px-2 py-0.5 rounded-full font-bold border border-amber-400/40 animate-pulse";
+          navDot.classList.remove('hidden');
+        } else {
+          badge.className = "text-[10px] bg-blue-900 text-blue-100 px-2 py-0.5 rounded-full font-bold border border-blue-400/30";
+          navDot.classList.add('hidden');
+        }
+      }
+
+      // Navigation Router
+      function navigate(viewId) {
+        if (!state.isLoggedIn && viewId !== 'login') viewId = 'login';
+        state.currentView = viewId;
+
+        const views = ['login', 'catalogue', 'detail', 'editor', 'counter', 'sync'];
+        views.forEach(v => {
+          const el = document.getElementById(`view-${v}`);
+          if (el) el.classList.add('hidden');
+        });
+
+        const activeView = document.getElementById(`view-${viewId}`);
+        if (activeView) activeView.classList.remove('hidden');
+
+        const header = document.getElementById('app-header');
+        const nav = document.getElementById('app-nav');
+
+        if (viewId === 'login') {
+          header.classList.add('hidden');
+          nav.classList.add('hidden');
+        } else {
+          header.classList.remove('hidden');
+          nav.classList.remove('hidden');
+        }
+
+        // Update Nav Item States
+        ['catalogue', 'editor', 'counter', 'sync'].forEach(tab => {
+          const btn = document.getElementById(`nav-${tab}`);
+          if (btn) {
+            if (tab === viewId) {
+              btn.className = "flex-1 min-h-[48px] flex flex-col items-center justify-center font-bold text-blue-700 bg-blue-50/80 rounded-lg";
+              btn.setAttribute('aria-current', 'page');
+            } else {
+              btn.className = "flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold text-slate-500 rounded-lg hover:bg-slate-50";
+              btn.removeAttribute('aria-current');
+            }
+          }
+        });
+
+        if (viewId === 'catalogue') renderCatalogue();
+        if (viewId === 'counter') updateCounterUI();
+        if (viewId === 'sync') renderSyncQueue();
+        if (viewId === 'editor') restoreDraftToForm();
+
+        document.getElementById('main-content').focus();
+      }
+
+      // Auth Handlers
+      function handleLogin(e) {
+        if (e) e.preventDefault();
+        const idInput = document.getElementById('login-school').value.trim();
+        state.facilitatorId = idInput || 'FAC-NAM-704';
+        state.isLoggedIn = true;
+
+        localStorage.setItem('stem_auth', 'true');
+        localStorage.setItem('stem_fac_id', state.facilitatorId);
+
+        document.getElementById('user-display-id').textContent = `ID: ${state.facilitatorId}`;
+        navigate('catalogue');
+      }
+
+      function confirmSignOut() {
+        const modal = document.getElementById('signout-modal');
+        const warning = document.getElementById('modal-unsynced-warning');
+        if (state.offlineQueue.length > 0) {
+          warning.classList.remove('hidden');
+        } else {
+          warning.classList.add('hidden');
+        }
+        modal.classList.remove('hidden');
+      }
+
+      function executeSignOut() {
+        state.isLoggedIn = false;
+        state.offlineQueue = [];
+        state.draftPlan = null;
+
+        localStorage.removeItem('stem_auth');
+        localStorage.removeItem('stem_fac_id');
+        localStorage.removeItem('stem_queue');
+        localStorage.removeItem('stem_draft_plan');
+
+        updateQueueBadges();
+        document.getElementById('signout-modal').classList.add('hidden');
+        navigate('login');
+      }
+
+      // Catalogue
+      function renderCatalogue() {
+        const container = document.getElementById('catalogue-list');
+        const query = (document.getElementById('search-input').value || '').toLowerCase();
+        const gradeFilter = document.getElementById('filter-grade').value;
+        const topicFilter = document.getElementById('filter-topic').value;
+
+        const filtered = state.activities.filter(act => {
+          const matchesQuery = act.title.toLowerCase().includes(query) ||
+                               act.materials.join(' ').toLowerCase().includes(query);
+          const matchesGrade = !gradeFilter || act.grade === gradeFilter;
+          const matchesTopic = !topicFilter || act.topic === topicFilter;
+          return matchesQuery && matchesGrade && matchesTopic;
+        });
+
+        if (filtered.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-8 text-slate-400 text-xs bg-white rounded-2xl border border-slate-200">
+              No matching activities found for selected filters.
+            </div>`;
+          return;
+        }
+
+        container.innerHTML = filtered.map(act => `
+          <div onclick="STEMMate.catalogue.openDetail('${act.id}')" class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm hover:border-blue-500 transition cursor-pointer group focus-within:ring-2 focus-within:ring-blue-600" tabindex="0" role="button" aria-label="Open details for ${act.title}">
+            <div class="flex justify-between items-start gap-2">
+              <h3 class="font-bold text-slate-800 text-xs group-hover:text-blue-700 transition">${act.title}</h3>
+              <span class="bg-emerald-50 text-emerald-800 border border-emerald-200 text-[9px] font-bold px-2 py-0.5 rounded-full shrink-0">${act.grade}</span>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-1">${act.duration} mins • ${act.topic}</p>
+            <div class="mt-2.5 pt-2 border-t border-slate-100 text-blue-700 font-bold text-[11px] flex items-center justify-between">
+              <span>View Instructions & Safety &rarr;</span>
+              <span class="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-medium">Saved Local</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function openDetail(id) {
+        const act = state.activities.find(a => a.id === id);
+        if (!act) return;
+
+        document.getElementById('detail-content').innerHTML = `
+          <div class="flex justify-between items-start">
+            <h2 class="font-bold text-slate-900 text-base">${act.title}</h2>
+            <span class="bg-blue-100 text-blue-800 font-bold text-[10px] px-2 py-0.5 rounded-full">${act.grade}</span>
+          </div>
+          <p class="text-xs text-slate-500">${act.duration} Mins • ${act.topic}</p>
+
+          <div class="p-3 bg-red-50/70 border border-red-200 rounded-xl text-xs space-y-1">
+            <h4 class="font-bold text-red-900 flex items-center gap-1">⚠️ Safety Notes (R3)</h4>
+            <p class="text-red-800 text-[11px]">${act.safety || 'Standard classroom supervision applies.'}</p>
+          </div>
+
+          <div class="p-3 bg-blue-50/70 border border-blue-200 rounded-xl text-xs space-y-1">
+            <h4 class="font-bold text-blue-900">💡 Inclusion Prompts</h4>
+            <p class="text-blue-800 text-[11px]">${act.inclusion || 'Adapt pace as necessary.'}</p>
+          </div>
+
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1.5">
+            <h4 class="font-bold text-slate-800">Materials Required:</h4>
+            <ul class="list-disc list-inside text-slate-700 text-[11px] space-y-0.5">
+              ${act.materials.map(m => `<li>${m}</li>`).join('')}
+            </ul>
+          </div>
+
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1.5">
+            <h4 class="font-bold text-slate-800">Step-by-Step Instructions:</h4>
+            <p class="text-slate-700 text-[11px] whitespace-pre-line leading-relaxed">${act.notes}</p>
+          </div>
+        `;
+        navigate('detail');
+      }
+
+      // Editor & Validation
+      function autoSaveDraft() {
+        const draft = {
+          title: document.getElementById('plan-title').value,
+          grade: document.getElementById('plan-grade').value,
+          duration: document.getElementById('plan-duration').value,
+          topic: document.getElementById('plan-topic').value,
+          materials: document.getElementById('plan-materials').value,
+          safety: document.getElementById('plan-safety').value,
+          inclusion: document.getElementById('plan-inclusion').value,
+          notes: document.getElementById('plan-notes').value
+        };
+        state.draftPlan = draft;
+        localStorage.setItem('stem_draft_plan', JSON.stringify(draft));
+        document.getElementById('draft-status-tag').textContent = "Draft Autosaved";
+      }
+
+      function restoreDraftToForm() {
+        const saved = JSON.parse(localStorage.getItem('stem_draft_plan') || 'null');
+        if (saved) {
+          document.getElementById('plan-title').value = saved.title || '';
+          document.getElementById('plan-grade').value = saved.grade || 'Grade 8-10';
+          document.getElementById('plan-duration').value = saved.duration || 45;
+          document.getElementById('plan-topic').value = saved.topic || 'Physics & Energy';
+          document.getElementById('plan-materials').value = saved.materials || '';
+          document.getElementById('plan-safety').value = saved.safety || '';
+          document.getElementById('plan-inclusion').value = saved.inclusion || '';
+          document.getElementById('plan-notes').value = saved.notes || '';
+        }
+      }
+
+      function clearDraft() {
+        localStorage.removeItem('stem_draft_plan');
+        state.draftPlan = null;
+        document.getElementById('plan-form').reset();
+        document.getElementById('editor-error-summary').classList.add('hidden');
+        document.getElementById('err-title').classList.add('hidden');
+        document.getElementById('err-safety').classList.add('hidden');
+        document.getElementById('draft-status-tag').textContent = "Draft Cleared";
+      }
+
+      function handleSavePlan(e) {
+        if (e) e.preventDefault();
+
+        const title = document.getElementById('plan-title').value.trim();
+        const safety = document.getElementById('plan-safety').value.trim();
+        const duration = parseInt(document.getElementById('plan-duration').value, 10);
+
+        const errors = [];
+        if (!title) errors.push("Lesson Title is required.");
+        if (!safety) errors.push("Safety Notes are mandatory for STEM activities.");
+        if (isNaN(duration) || duration <= 0) errors.push("Duration must be a positive number.");
+
+        const errorSummary = document.getElementById('editor-error-summary');
+        const summaryList = document.getElementById('error-summary-list');
+        const errTitleEl = document.getElementById('err-title');
+        const errSafetyEl = document.getElementById('err-safety');
+
+        if (errors.length > 0) {
+          summaryList.innerHTML = errors.map(err => `<li>${err}</li>`).join('');
+          errorSummary.classList.remove('hidden');
+
+          if (!title) errTitleEl.classList.remove('hidden');
+          else errTitleEl.classList.add('hidden');
+
+          if (!safety) errSafetyEl.classList.remove('hidden');
+          else errSafetyEl.classList.add('hidden');
+
+          errorSummary.focus();
+          return false;
+        }
+
+        errorSummary.classList.add('hidden');
+        errTitleEl.classList.add('hidden');
+        errSafetyEl.classList.add('hidden');
+
+        const newPlan = {
+          id: 'plan-' + Date.now(),
+          title: title,
+          grade: document.getElementById('plan-grade').value,
+          duration: duration,
+          topic: document.getElementById('plan-topic').value,
+          materials: document.getElementById('plan-materials').value.split(',').map(m => m.trim()).filter(Boolean),
+          safety: safety,
+          inclusion: document.getElementById('plan-inclusion').value.trim(),
+          notes: document.getElementById('plan-notes').value.trim(),
+          status: 'pending',
+          createdAt: new Date().toISOString()
+        };
+
+        state.activities.unshift(newPlan);
+        state.offlineQueue.push(newPlan);
+
+        localStorage.setItem('stem_activities', JSON.stringify(state.activities));
+        localStorage.setItem('stem_queue', JSON.stringify(state.offlineQueue));
+
+        clearDraft();
+        updateQueueBadges();
+        navigate('catalogue');
+        return true;
+      }
+
+      // Counter & Sync
+      function adjustCounter(val) {
+        state.attendance = Math.max(0, state.attendance + val);
+        localStorage.setItem('stem_attendance', state.attendance.toString());
+        updateCounterUI();
+      }
+
+      function updateCounterUI() {
+        document.getElementById('student-count').textContent = state.attendance;
+      }
+
+      function renderSyncQueue() {
+        const container = document.getElementById('queue-items-list');
+        if (state.offlineQueue.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-8 text-slate-400 text-xs bg-white rounded-2xl border border-slate-200">
+              No pending plans in sync queue. All work saved locally!
+            </div>`;
+          return;
+        }
+
+        container.innerHTML = state.offlineQueue.map((item, idx) => `
+          <div class="p-3.5 bg-white border border-slate-200 rounded-2xl text-xs space-y-2 shadow-sm">
+            <div class="flex justify-between items-start">
+              <div>
+                <h4 class="font-bold text-slate-800">${item.title}</h4>
+                <p class="text-[10px] text-slate-500">${item.grade} • ${item.topic}</p>
+              </div>
+              <span class="text-[9px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full border border-amber-200">
+                ${item.status || 'Pending'}
+              </span>
+            </div>
+
+            <div class="flex gap-2 pt-1 border-t border-slate-100">
+              <button onclick="STEMMate.sync.resolveConflict(${idx}, 'upload')" class="flex-1 bg-blue-700 hover:bg-blue-800 text-white text-[10px] py-1.5 rounded-lg font-bold">
+                Push to Cloud
+              </button>
+              <button onclick="STEMMate.sync.resolveConflict(${idx}, 'keep')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] py-1.5 rounded-lg font-bold">
+                Keep Offline
+              </button>
+              <button onclick="STEMMate.sync.resolveConflict(${idx}, 'discard')" class="px-2 bg-red-50 hover:bg-red-100 text-red-600 text-[10px] py-1.5 rounded-lg font-bold">
+                Discard
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function resolveConflict(index, action) {
+        if (action === 'discard') {
+          state.offlineQueue.splice(index, 1);
+        } else if (action === 'upload' || action === 'keep') {
+          state.offlineQueue[index].status = (action === 'upload') ? 'synced' : 'pending';
+          if (action === 'upload') {
+            state.offlineQueue.splice(index, 1);
+          }
+        }
+
+        localStorage.setItem('stem_queue', JSON.stringify(state.offlineQueue));
+        updateQueueBadges();
+        renderSyncQueue();
+      }
+
+      function forceSyncAll() {
+        if (!navigator.onLine) {
+          alert("Cannot sync: Internet connection is currently offline.");
+          return;
+        }
+
+        state.offlineQueue.forEach(item => item.status = 'syncing');
+        renderSyncQueue();
+
+        setTimeout(() => {
+          state.offlineQueue = [];
+          localStorage.removeItem('stem_queue');
+          updateQueueBadges();
+          renderSyncQueue();
+          alert("All queued session plans successfully synchronized with NSSDL central server!");
+        }, 1000);
+      }
+
+      function toggleViewMode() {
+        const container = document.getElementById('app-container');
+        state.isFullScreen = !state.isFullScreen;
+        if (state.isFullScreen) {
+          container.className = "w-full h-full bg-white shadow-none border-none flex flex-col overflow-hidden relative";
+        } else {
+          container.className = "w-full max-w-md h-full sm:h-[840px] sm:max-h-[95vh] bg-white sm:rounded-3xl shadow-2xl sm:border-8 sm:border-slate-800 flex flex-col overflow-hidden relative";
+        }
+      }
+
+      function init() {
+        registerSW();
+
+        const savedActivities = JSON.parse(localStorage.getItem('stem_activities') || 'null');
+        state.activities = savedActivities || INITIAL_ACTIVITIES;
+
+        state.offlineQueue = JSON.parse(localStorage.getItem('stem_queue') || '[]');
+        state.attendance = parseInt(localStorage.getItem('stem_attendance') || '0', 10);
+        state.facilitatorId = localStorage.getItem('stem_fac_id') || 'FAC-NAM-704';
+
+        window.addEventListener('online', updateNetworkStatus);
+        window.addEventListener('offline', updateNetworkStatus);
+        updateNetworkStatus();
+        updateQueueBadges();
+
+        if (localStorage.getItem('stem_auth') === 'true') {
+          state.isLoggedIn = true;
+          document.getElementById('user-display-id').textContent = `ID: ${state.facilitatorId}`;
+          navigate('catalogue');
+        } else {
+          navigate('login');
+        }
+      }
+
+      window.STEMMate = {
+        state,
+        router: { navigate },
+        auth: { handleLogin, confirmSignOut, executeSignOut },
+        catalogue: { render: renderCatalogue, openDetail },
+        editor: { handleSave: handleSavePlan, autoSaveDraft, clearDraft },
+        counter: { adjust: adjustCounter },
+        sync: { forceSyncAll, resolveConflict, render: renderSyncQueue },
+        ui: { toggleViewMode }
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+
+    })();
+  </script>
+</body>
+</html>
