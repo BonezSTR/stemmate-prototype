@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stemmate-v0.2';
+const CACHE_NAME = 'stemmate-namibia-v1';
 const ASSETS_TO_CACHE = [
   './index.html',
   './manifest.json',
@@ -9,7 +9,6 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[Service Worker] Caching App Shell v0.2');
       return cache.addAll(ASSETS_TO_CACHE);
     })
   );
@@ -20,7 +19,11 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
-        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
       );
     })
   );
@@ -29,14 +32,8 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        if (response.status === 200) {
-          const resClone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, resClone));
-        }
-        return response;
-      })
-      .catch(() => caches.match(event.request).then(res => res || caches.match('./index.html')))
+    fetch(event.request).catch(() => {
+      return caches.match(event.request);
+    })
   );
 });
