@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>STEMMate Namibia - Facilitator Offline Session Planner</title>
+  <title>STEMMate Namibia - RBAC Offline Session Planner</title>
   <meta name="theme-color" content="#1d4ed8" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,7 +24,7 @@
 
   <div id="app-container" class="w-full max-w-md h-full sm:h-[840px] sm:max-h-[95vh] bg-white sm:rounded-3xl shadow-2xl sm:border-8 sm:border-slate-800 flex flex-col overflow-hidden relative">
     
-    <!-- Status Banner -->
+    <!-- Dual Network Status Banner (WCAG R8 Compliance) -->
     <div id="status-banner" role="status" aria-live="polite" class="bg-blue-700 text-white text-xs font-semibold px-4 py-2 flex items-center justify-between shadow-sm z-30">
       <div class="flex items-center gap-2">
         <span id="status-icon">🌐</span>
@@ -38,56 +38,97 @@
       </div>
     </div>
 
-    <!-- Header -->
+    <!-- Application Header -->
     <header id="app-header" class="hidden bg-slate-900 text-white px-4 py-3 flex justify-between items-center z-20 border-b border-slate-800">
       <div class="flex items-center gap-2">
         <div class="w-7 h-7 bg-blue-600 rounded-lg flex items-center justify-center font-black text-sm">⚡</div>
         <h1 class="font-bold text-base text-white">STEMMate <span class="text-xs text-blue-400 font-normal">Namibia</span></h1>
       </div>
-      <span id="user-display-id" class="text-[10px] bg-slate-800 text-slate-300 px-2 py-1 rounded font-mono border border-slate-700">ID: Guest</span>
+      <div class="text-right">
+        <span id="user-display-id" class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono border border-slate-700 block">ID: Guest</span>
+        <span id="user-display-role" class="text-[9px] text-blue-400 font-bold uppercase block">Facilitator</span>
+      </div>
     </header>
 
     <!-- Main Views Container -->
     <main id="main-content" class="flex-1 overflow-y-auto p-4 bg-slate-50 relative focus:outline-none" tabindex="-1">
 
-      <!-- 1. LOGIN WITH SYNTHETIC USER VALIDATION -->
+      <!-- 1. LOGIN VIEW -->
       <section id="view-login" class="h-full flex flex-col justify-between py-2">
-        <div class="my-auto space-y-5">
-          <div class="text-center space-y-2">
-            <div class="w-16 h-16 bg-gradient-to-tr from-blue-700 to-indigo-600 text-white rounded-2xl flex items-center justify-center text-3xl font-black mx-auto shadow-xl ring-4 ring-blue-100">⚡</div>
-            <h2 class="font-bold text-slate-900 text-2xl tracking-tight">STEMMate Namibia</h2>
-            <p class="text-xs text-slate-500 max-w-[260px] mx-auto">Offline-First Facilitator Tool</p>
+        <div class="my-auto space-y-4">
+          <div class="text-center space-y-1">
+            <div class="w-14 h-14 bg-gradient-to-tr from-blue-700 to-indigo-600 text-white rounded-2xl flex items-center justify-center text-3xl font-black mx-auto shadow-xl ring-4 ring-blue-100">⚡</div>
+            <h2 class="font-bold text-slate-900 text-xl tracking-tight">STEMMate Namibia</h2>
+            <p class="text-xs text-slate-500">Offline-First STEM Planning Engine</p>
           </div>
 
-          <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl text-xs text-emerald-950 shadow-sm">
-            <strong class="font-bold block">🛡️ Privacy Protected (R9)</strong>
-            <p class="text-[11px] text-emerald-800 mt-0.5">Use synthetic IDs only. No personal learner data collected.</p>
+          <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl text-xs text-emerald-950">
+            <strong class="font-bold block">🛡️ Privacy Shield (R9)</strong>
+            <p class="text-[11px] text-emerald-800">Synthetic IDs only. Zero pupil PII collected.</p>
           </div>
 
-          <!-- Auth Validation Error Banner -->
-          <div id="auth-error-banner" class="hidden p-3 bg-red-50 border-l-4 border-red-600 rounded-r-xl text-xs text-red-900 font-medium" role="alert"></div>
+          <!-- Auth Validation Banner -->
+          <div id="auth-error-banner" class="hidden p-2.5 bg-red-50 border-l-4 border-red-600 rounded-r-xl text-xs text-red-900 font-medium" role="alert"></div>
 
-          <form id="login-form" onsubmit="STEMMate.auth.handleLogin(event)" class="space-y-3.5 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <form id="login-form" onsubmit="STEMMate.auth.handleLogin(event)" class="space-y-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
             <div>
-              <label for="login-school" class="block text-xs font-bold text-slate-700 mb-1">Facilitator ID (Format: FAC-XXX-00)</label>
-              <input type="text" id="login-school" value="FAC-KHOMAS-01" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 outline-none" />
+              <label for="login-id" class="block text-xs font-bold text-slate-700 mb-1">Facilitator / User ID</label>
+              <input type="text" id="login-id" value="FAC-KHOMAS-01" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 outline-none" />
             </div>
             <div>
-              <label for="login-pin" class="block text-xs font-bold text-slate-700 mb-1">Passcode PIN (4 digits)</label>
+              <label for="login-pin" class="block text-xs font-bold text-slate-700 mb-1">4-Digit Passcode PIN</label>
               <input type="password" id="login-pin" value="1234" maxlength="4" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 outline-none" />
             </div>
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">
-              Authenticate Session &rarr;
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition">
+              Sign In to Session &rarr;
             </button>
           </form>
 
-          <div class="text-[10px] text-slate-400 text-center">
-            Valid IDs: <code class="bg-slate-200 px-1 py-0.5 rounded">FAC-KHOMAS-01</code> (PIN: 1234) | <code class="bg-slate-200 px-1 py-0.5 rounded">FAC-ERONGO-02</code> (PIN: 5678)
+          <div class="flex justify-between items-center text-xs px-1">
+            <button onclick="STEMMate.router.navigate('register')" class="text-blue-700 font-bold hover:underline">
+              + Register New User Account
+            </button>
           </div>
         </div>
       </section>
 
-      <!-- 2. CATALOGUE -->
+      <!-- 2. USER REGISTRATION VIEW (ROLE ASSIGNMENT) -->
+      <section id="view-register" class="hidden space-y-3">
+        <button onclick="STEMMate.router.navigate('login')" class="text-xs text-blue-700 font-bold hover:underline mb-1">&larr; Back to Login</button>
+        <div class="bg-white p-4 border border-slate-200 rounded-2xl shadow-sm space-y-3">
+          <h2 class="font-bold text-slate-800 text-sm">Register User Account</h2>
+          
+          <div id="reg-error-banner" class="hidden p-2 bg-red-50 border border-red-200 rounded-lg text-xs text-red-800 font-medium"></div>
+
+          <form id="register-form" onsubmit="STEMMate.auth.handleRegister(event)" class="space-y-3 text-xs">
+            <div>
+              <label for="reg-id" class="block font-bold text-slate-700 mb-1">Synthetic ID (Format: FAC-REGION-00)</label>
+              <input type="text" id="reg-id" placeholder="e.g. FAC-ERONGO-05" required class="w-full p-2 border border-slate-300 rounded-lg bg-slate-50" />
+            </div>
+            <div>
+              <label for="reg-name" class="block font-bold text-slate-700 mb-1">Full Synthetic Display Name</label>
+              <input type="text" id="reg-name" placeholder="e.g. Facilitator M. Strauss" required class="w-full p-2 border border-slate-300 rounded-lg bg-slate-50" />
+            </div>
+            <div>
+              <label for="reg-role" class="block font-bold text-slate-700 mb-1">Assigned Access Role</label>
+              <select id="reg-role" class="w-full p-2 border border-slate-300 rounded-lg bg-slate-50">
+                <option value="facilitator">Facilitator (Standard Planner)</option>
+                <option value="lead">School Lead / Coordinator</option>
+                <option value="admin">System Administrator</option>
+              </select>
+            </div>
+            <div>
+              <label for="reg-pin" class="block font-bold text-slate-700 mb-1">Set 4-Digit Passcode PIN</label>
+              <input type="password" id="reg-pin" maxlength="4" required placeholder="••••" class="w-full p-2 border border-slate-300 rounded-lg bg-slate-50" />
+            </div>
+            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl shadow-md transition">
+              Create & Save Local Account
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- 3. CATALOGUE VIEW -->
       <section id="view-catalogue" class="hidden space-y-3">
         <div class="bg-white p-3 border border-slate-200 rounded-2xl shadow-sm space-y-2.5">
           <input type="text" id="search-input" oninput="STEMMate.catalogue.render()" placeholder="🔍 Search title or materials..." class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600" />
@@ -115,13 +156,13 @@
         <div id="catalogue-list" class="space-y-2.5"></div>
       </section>
 
-      <!-- 3. DETAIL VIEW -->
+      <!-- 4. ACTIVITY DETAIL VIEW -->
       <section id="view-detail" class="hidden space-y-3">
         <button onclick="STEMMate.router.navigate('catalogue')" class="text-xs text-blue-700 font-bold hover:underline mb-1">&larr; Back to Catalogue</button>
         <div id="detail-content" class="bg-white p-4 border border-slate-200 rounded-2xl shadow-sm space-y-3"></div>
       </section>
 
-      <!-- 4. PLAN CREATOR WITH STRICT VALIDATION -->
+      <!-- 5. PLAN CREATOR (STRICT VALIDATION) -->
       <section id="view-editor" class="hidden space-y-3 text-xs">
         <div class="flex justify-between items-center border-b border-slate-200 pb-2">
           <div>
@@ -172,7 +213,7 @@
             <input type="text" id="plan-materials" oninput="STEMMate.editor.autoSaveDraft()" placeholder="Plastic bottles, sand, charcoal" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-600" />
           </div>
 
-          <!-- Mandatory Safety Notes Field (R3 Requirements) -->
+          <!-- Mandatory Safety Notes Field (R3) -->
           <div>
             <label for="plan-safety" class="block font-bold text-red-700 mb-1">⚠️ Safety Notes <span class="text-red-600">* Mandatory</span></label>
             <textarea id="plan-safety" rows="2" oninput="STEMMate.editor.autoSaveDraft()" placeholder="Mandatory safety instructions..." class="w-full p-2.5 border border-red-200 bg-red-50/30 rounded-xl focus:ring-2 focus:ring-red-600"></textarea>
@@ -199,7 +240,7 @@
         </form>
       </section>
 
-      <!-- 5. COUNTER (R9) -->
+      <!-- 6. COUNTER (R9 AGGREGATE ONLY) -->
       <section id="view-counter" class="hidden h-full flex flex-col justify-center text-center py-4">
         <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm max-w-[280px] mx-auto w-full space-y-4">
           <h2 class="font-bold text-slate-800 text-sm">Aggregate Headcount Tracker</h2>
@@ -214,18 +255,18 @@
         </div>
       </section>
 
-      <!-- 6. SYNC HUB (R5) -->
+      <!-- 7. SYNC HUB (ROLE RESTRICTED SYNC ALL) -->
       <section id="view-sync" class="hidden space-y-3">
         <div class="flex justify-between items-center border-b border-slate-200 pb-2">
           <h2 class="font-bold text-slate-800 text-sm">Sync Queue & Conflicts</h2>
-          <button onclick="STEMMate.sync.forceSyncAll()" class="text-xs bg-blue-700 text-white font-bold px-3 py-1.5 rounded-lg shadow-sm">Sync All Now</button>
+          <button id="sync-all-btn" onclick="STEMMate.sync.forceSyncAll()" class="text-xs bg-blue-700 text-white font-bold px-3 py-1.5 rounded-lg shadow-sm">Sync All Now</button>
         </div>
         <div id="queue-items-list" class="space-y-2.5"></div>
       </section>
 
     </main>
 
-    <!-- Navigation -->
+    <!-- Bottom Navigation -->
     <nav id="app-nav" class="hidden bg-white border-t border-slate-200 py-1.5 px-2 flex justify-around text-[10px] text-slate-500 z-20">
       <button onclick="STEMMate.router.navigate('catalogue')" id="nav-catalogue" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold">📖 Catalogue</button>
       <button onclick="STEMMate.router.navigate('editor')" id="nav-editor" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold">📝 Plan Creator</button>
@@ -256,11 +297,11 @@
     (function () {
       'use strict';
 
-      // SYNTHETIC USER DATABASE (R9/R10 Compliance)
-      const SYNTHETIC_USERS = {
-        'FAC-KHOMAS-01': { pin: '1234', region: 'Khomas' },
-        'FAC-ERONGO-02': { pin: '5678', region: 'Erongo' },
-        'FAC-OANA-03':   { pin: '9999', region: 'Ohangwena' }
+      // SEED SYNTHETIC USER ACCOUNTS WITH ROLE ASSIGNMENTS
+      const DEFAULT_USERS = {
+        'FAC-KHOMAS-01': { name: 'Facilitator M. Strauss', pin: '1234', role: 'facilitator' },
+        'LEAD-ERONGO-01': { name: 'Lead Coordinator E. Kahanda', pin: '5678', role: 'lead' },
+        'ADMIN-NSSDL-01': { name: 'Admin M. Deny', pin: '9999', role: 'admin' }
       };
 
       const INITIAL_ACTIVITIES = [
@@ -269,7 +310,7 @@
 
       const state = {
         isLoggedIn: false,
-        facilitatorId: null,
+        currentUser: null,
         currentView: 'login',
         activities: [],
         attendance: 0,
@@ -277,39 +318,70 @@
         draftPlan: null
       };
 
-      // AUTH SYSTEM WITH USER VALIDATION
+      function getUsers() {
+        return JSON.parse(localStorage.getItem('stem_users') || 'null') || DEFAULT_USERS;
+      }
+
+      // AUTHENTICATION & USER REGISTRATION LOGIC
       function handleLogin(e) {
         if (e) e.preventDefault();
-        const idInput = document.getElementById('login-school').value.trim().toUpperCase();
+        const idInput = document.getElementById('login-id').value.trim().toUpperCase();
         const pinInput = document.getElementById('login-pin').value.trim();
         const banner = document.getElementById('auth-error-banner');
 
-        // Validation 1: Format Check
-        const idPattern = /^FAC-[A-Z]+-\d{2}$/;
-        if (!idPattern.test(idInput)) {
-          banner.textContent = "Invalid ID Format. Use pattern like FAC-KHOMAS-01.";
-          banner.classList.remove('hidden');
-          return;
-        }
+        const users = getUsers();
+        const user = users[idInput];
 
-        // Validation 2: Synthetic User Lookup
-        const user = SYNTHETIC_USERS[idInput];
         if (!user || user.pin !== pinInput) {
           banner.textContent = "Authentication Failed: Invalid ID or Passcode PIN.";
           banner.classList.remove('hidden');
           return;
         }
 
-        // Validated successfully
         banner.classList.add('hidden');
-        state.facilitatorId = idInput;
+        state.currentUser = { id: idInput, ...user };
         state.isLoggedIn = true;
 
         localStorage.setItem('stem_auth', 'true');
-        localStorage.setItem('stem_fac_id', idInput);
+        localStorage.setItem('stem_current_user', JSON.stringify(state.currentUser));
 
         document.getElementById('user-display-id').textContent = `ID: ${idInput}`;
+        document.getElementById('user-display-role').textContent = user.role;
         navigate('catalogue');
+      }
+
+      function handleRegister(e) {
+        if (e) e.preventDefault();
+        const id = document.getElementById('reg-id').value.trim().toUpperCase();
+        const name = document.getElementById('reg-name').value.trim();
+        const role = document.getElementById('reg-role').value;
+        const pin = document.getElementById('reg-pin').value.trim();
+        const banner = document.getElementById('reg-error-banner');
+
+        const idPattern = /^FAC-[A-Z]+-\d{2}$|^LEAD-[A-Z]+-\d{2}$|^ADMIN-[A-Z]+-\d{2}$/;
+        if (!idPattern.test(id)) {
+          banner.textContent = "ID must match format FAC-REGION-00, LEAD-REGION-00, or ADMIN-REGION-00.";
+          banner.classList.remove('hidden');
+          return;
+        }
+
+        if (pin.length !== 4 || isNaN(parseInt(pin, 10))) {
+          banner.textContent = "Passcode PIN must be exactly 4 digits.";
+          banner.classList.remove('hidden');
+          return;
+        }
+
+        const users = getUsers();
+        if (users[id]) {
+          banner.textContent = "User ID already exists on this device.";
+          banner.classList.remove('hidden');
+          return;
+        }
+
+        users[id] = { name, role, pin };
+        localStorage.setItem('stem_users', JSON.stringify(users));
+        alert(`Account ${id} registered successfully! You can now log in.`);
+        navigate('login');
       }
 
       function confirmSignOut() {
@@ -318,14 +390,17 @@
 
       function executeSignOut() {
         state.isLoggedIn = false;
+        state.currentUser = null;
         state.offlineQueue = [];
         state.draftPlan = null;
-        localStorage.clear();
+        localStorage.removeItem('stem_auth');
+        localStorage.removeItem('stem_current_user');
+        localStorage.removeItem('stem_draft_plan');
         document.getElementById('signout-modal').classList.add('hidden');
         navigate('login');
       }
 
-      // PLAN CREATOR FORM VALIDATION (R3)
+      // FORM VALIDATION & DRAFT ENGINE
       function handleSavePlan(e) {
         if (e) e.preventDefault();
 
@@ -359,6 +434,7 @@
           safety: safety,
           inclusion: document.getElementById('plan-inclusion').value.trim(),
           notes: document.getElementById('plan-notes').value.trim(),
+          author: state.currentUser ? state.currentUser.id : 'Anonymous',
           status: 'pending',
           createdAt: new Date().toISOString()
         };
@@ -389,12 +465,12 @@
         document.getElementById('editor-error-summary').classList.add('hidden');
       }
 
-      // ROUTER
+      // ROUTING
       function navigate(viewId) {
-        if (!state.isLoggedIn && viewId !== 'login') viewId = 'login';
+        if (!state.isLoggedIn && viewId !== 'login' && viewId !== 'register') viewId = 'login';
         state.currentView = viewId;
 
-        ['login', 'catalogue', 'detail', 'editor', 'counter', 'sync'].forEach(v => {
+        ['login', 'register', 'catalogue', 'detail', 'editor', 'counter', 'sync'].forEach(v => {
           document.getElementById(`view-${v}`).classList.add('hidden');
         });
         document.getElementById(`view-${viewId}`).classList.remove('hidden');
@@ -402,7 +478,7 @@
         const header = document.getElementById('app-header');
         const nav = document.getElementById('app-nav');
 
-        if (viewId === 'login') {
+        if (viewId === 'login' || viewId === 'register') {
           header.classList.add('hidden');
           nav.classList.add('hidden');
         } else {
@@ -477,8 +553,11 @@
         state.offlineQueue = JSON.parse(localStorage.getItem('stem_queue') || '[]');
         if (localStorage.getItem('stem_auth') === 'true') {
           state.isLoggedIn = true;
-          state.facilitatorId = localStorage.getItem('stem_fac_id');
-          document.getElementById('user-display-id').textContent = `ID: ${state.facilitatorId}`;
+          state.currentUser = JSON.parse(localStorage.getItem('stem_current_user'));
+          if (state.currentUser) {
+            document.getElementById('user-display-id').textContent = `ID: ${state.currentUser.id}`;
+            document.getElementById('user-display-role').textContent = state.currentUser.role;
+          }
           navigate('catalogue');
         } else {
           navigate('login');
@@ -488,7 +567,7 @@
       window.STEMMate = {
         state,
         router: { navigate },
-        auth: { handleLogin, confirmSignOut, executeSignOut },
+        auth: { handleLogin, handleRegister, confirmSignOut, executeSignOut },
         catalogue: { render: renderCatalogue, openDetail },
         editor: { handleSave: handleSavePlan, autoSaveDraft, clearDraft },
         counter: { adjust: adjustCounter },
