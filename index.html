@@ -95,9 +95,9 @@
           </div>
 
           <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl text-xs text-emerald-900 flex items-start gap-2.5 shadow-sm">
-            <span class="text-lg leading-none" aria-hidden="true">🛡️</span>
+            <span class="text-lg leading-none" aria-hidden="true"></span>
             <div>
-              <strong class="font-bold block text-emerald-950">Privacy Protected (ADR-5)</strong>
+              <strong class="font-bold block text-emerald-950">Privacy Protected</strong>
               <p class="text-[11px] text-emerald-800 mt-0.5 leading-relaxed">No pupil names, personal details, or sensitive IDs are ever requested or stored.</p>
             </div>
           </div>
@@ -174,7 +174,7 @@
           <span id="draft-status-tag" class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full font-bold">Draft Restored</span>
         </div>
         <div id="editor-error-summary" class="hidden p-3 bg-red-50 border-l-4 border-red-600 rounded-r-xl text-xs text-red-900 space-y-1" role="alert" tabindex="-1">
-          <strong class="font-bold block flex items-center gap-1 text-red-950"><span>⚠️</span> Please fix the missing or invalid fields:</strong>
+          <strong class="font-bold block flex items-center gap-1 text-red-950">Please fix the missing or invalid fields:</strong>
           <ul id="error-summary-list" class="list-disc list-inside text-[11px] space-y-0.5 text-red-800"></ul>
         </div>
         <form id="plan-form" onsubmit="STEMMate.editor.handleSave(event)" class="space-y-3">
@@ -210,12 +210,12 @@
             <input type="text" id="plan-materials" oninput="STEMMate.editor.autoSaveDraft()" placeholder="Plastic bottles, charcoal, sand, clear plastic wrap" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-600" />
           </div>
           <div>
-            <label for="plan-safety" class="block font-bold text-red-700 mb-1">⚠️ Safety Notes <span class="text-red-600">* Mandatory</span></label>
+            <label for="plan-safety" class="block font-bold text-red-700 mb-1">Safety Notes <span class="text-red-600">* Mandatory</span></label>
             <textarea id="plan-safety" rows="2" oninput="STEMMate.editor.autoSaveDraft()" placeholder="e.g., Exercise caution with boiling water. Wear safety glasses..." class="w-full p-2.5 border border-red-200 bg-red-50/30 rounded-xl focus:ring-2 focus:ring-red-600 focus:bg-white"></textarea>
             <span id="err-safety" class="hidden text-[10px] text-red-600 font-bold mt-1 block">Safety notes are mandatory for STEM activities.</span>
           </div>
           <div>
-            <label for="plan-inclusion" class="block font-bold text-blue-800 mb-1">💡 Inclusion & Differentiation Prompts</label>
+            <label for="plan-inclusion" class="block font-bold text-blue-800 mb-1">Inclusion & Differentiation Prompts</label>
             <textarea id="plan-inclusion" rows="2" oninput="STEMMate.editor.autoSaveDraft()" placeholder="e.g., Pair students with varied learning preferences..." class="w-full p-2.5 border border-blue-200 bg-blue-50/20 rounded-xl focus:ring-2 focus:ring-blue-600"></textarea>
           </div>
           <div>
@@ -223,7 +223,7 @@
             <textarea id="plan-notes" rows="3" oninput="STEMMate.editor.autoSaveDraft()" placeholder="1. Introduction (10 mins)... 2. Hands-on build (25 mins)..." class="w-full p-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-600"></textarea>
           </div>
           <div class="flex gap-2 pt-2">
-            <button type="submit" class="flex-1 bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">💾 Save & Queue for Sync</button>
+            <button type="submit" class="flex-1 bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">Save & Queue for Sync</button>
             <button type="button" onclick="STEMMate.editor.clearDraft()" class="px-3 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs">Clear</button>
           </div>
         </form>
@@ -259,7 +259,7 @@
         </div>
         <div id="sync-summary-box" class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="text-base">⏳</span>
+            <span class="text-base"></span>
             <div>
               <strong class="block font-bold">Sync Queue Status</strong>
               <span id="queue-summary-text" class="text-[11px] text-amber-800">0 items in queue.</span>
@@ -273,11 +273,11 @@
 
     <!-- Bottom Navigation -->
     <nav id="app-nav" class="hidden bg-white border-t border-slate-200 py-1.5 px-2 flex justify-around text-[10px] text-slate-500 z-20 shadow-lg">
-      <button onclick="STEMMate.router.navigate('catalogue')" id="nav-catalogue" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50"><span class="text-base" aria-hidden="true">📖</span><span>Catalogue</span></button>
-      <button onclick="STEMMate.router.navigate('editor')" id="nav-editor" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50"><span class="text-base" aria-hidden="true">📝</span><span>Plan Creator</span></button>
-      <button onclick="STEMMate.router.navigate('counter')" id="nav-counter" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50"><span class="text-base" aria-hidden="true">👥</span><span>Headcount</span></button>
-      <button onclick="STEMMate.router.navigate('sync')" id="nav-sync" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50 relative"><span class="text-base" aria-hidden="true">🔄</span><span>Sync Hub</span><span id="nav-queue-dot" class="hidden absolute top-1.5 right-4 w-2 h-2 bg-amber-500 rounded-full"></span></button>
-      <button onclick="STEMMate.auth.confirmSignOut()" id="nav-logout" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold text-red-600 rounded-lg hover:bg-red-50"><span class="text-base" aria-hidden="true">🚪</span><span>Sign Out</span></button>
+      <button onclick="STEMMate.router.navigate('catalogue')" id="nav-catalogue" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50"><span class="text-base" aria-hidden="true"></span><span>Catalogue</span></button>
+      <button onclick="STEMMate.router.navigate('editor')" id="nav-editor" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50"><span class="text-base" aria-hidden="true"></span><span>Plan Creator</span></button>
+      <button onclick="STEMMate.router.navigate('counter')" id="nav-counter" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50"><span class="text-base" aria-hidden="true"></span><span>Headcount</span></button>
+      <button onclick="STEMMate.router.navigate('sync')" id="nav-sync" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50 relative"><span class="text-base" aria-hidden="true"></span><span>Sync Hub</span><span id="nav-queue-dot" class="hidden absolute top-1.5 right-4 w-2 h-2 bg-amber-500 rounded-full"></span></button>
+      <button onclick="STEMMate.auth.confirmSignOut()" id="nav-logout" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold text-red-600 rounded-lg hover:bg-red-50"><span class="text-base" aria-hidden="true"></span><span>Sign Out</span></button>
     </nav>
   </div>
 
