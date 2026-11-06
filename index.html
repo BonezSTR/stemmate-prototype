@@ -54,7 +54,7 @@
     <!-- Top Status Banner (QR-02: text + icon, not colour alone) -->
     <div id="status-banner" role="status" aria-live="polite" class="bg-blue-700 text-white text-xs font-semibold px-4 py-2 flex items-center justify-between shadow-sm z-30 transition-colors duration-200">
       <div class="flex items-center gap-2">
-        <span id="status-icon" class="text-sm" aria-hidden="true">🌐</span>
+        <span id="status-icon" class="text-sm font-bold" aria-hidden="true">[Net]</span>
         <span id="status-text" class="text-[11px] sm:text-xs">Cloud Connected</span>
       </div>
       <div class="flex items-center gap-2">
@@ -62,11 +62,11 @@
           Sync Queue: 0
         </span>
         <!-- Settings button (SR-02 data-saving mode, simulation toggles) -->
-        <button onclick="STEMMate.ui.openSettings()" title="Settings" class="text-xs hover:bg-blue-800 p-1 rounded focus:ring-1 focus:ring-white" aria-label="Open settings">
-          ⚙️
+        <button onclick="STEMMate.ui.openSettings()" title="Settings" class="text-xs font-bold hover:bg-blue-800 px-1.5 py-0.5 rounded focus:ring-1 focus:ring-white" aria-label="Open settings">
+          Settings
         </button>
-        <button onclick="STEMMate.ui.toggleViewMode()" title="Toggle Desktop/Mobile View" class="text-xs hover:bg-blue-800 p-1 rounded focus:ring-1 focus:ring-white" aria-label="Toggle full screen view">
-          📱 / 🖥️
+        <button onclick="STEMMate.ui.toggleViewMode()" title="Toggle Desktop/Mobile View" class="text-xs font-bold hover:bg-blue-800 px-1.5 py-0.5 rounded focus:ring-1 focus:ring-white" aria-label="Toggle full screen view">
+          View
         </button>
       </div>
     </div>
@@ -95,9 +95,8 @@
           </div>
 
           <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl text-xs text-emerald-900 flex items-start gap-2.5 shadow-sm">
-            <span class="text-lg leading-none" aria-hidden="true"></span>
             <div>
-              <strong class="font-bold block text-emerald-950">Privacy Protected</strong>
+              <strong class="font-bold block text-emerald-950">Privacy Protected (ADR-5)</strong>
               <p class="text-[11px] text-emerald-800 mt-0.5 leading-relaxed">No pupil names, personal details, or sensitive IDs are ever requested or stored.</p>
             </div>
           </div>
@@ -128,7 +127,7 @@
         <div class="bg-white p-3 border border-slate-200 rounded-2xl shadow-sm space-y-2.5">
           <div>
             <label for="search-input" class="sr-only">Search activities</label>
-            <input type="text" id="search-input" oninput="STEMMate.catalogue.render()" placeholder="🔍 Search title or materials..." class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600" />
+            <input type="text" id="search-input" oninput="STEMMate.catalogue.render()" placeholder="Search title or materials..." class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600" />
           </div>
           <div class="grid grid-cols-2 gap-2 text-xs">
             <div>
@@ -174,7 +173,7 @@
           <span id="draft-status-tag" class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full font-bold">Draft Restored</span>
         </div>
         <div id="editor-error-summary" class="hidden p-3 bg-red-50 border-l-4 border-red-600 rounded-r-xl text-xs text-red-900 space-y-1" role="alert" tabindex="-1">
-          <strong class="font-bold block flex items-center gap-1 text-red-950">Please fix the missing or invalid fields:</strong>
+          <strong class="font-bold block text-red-950">Please fix the missing or invalid fields:</strong>
           <ul id="error-summary-list" class="list-disc list-inside text-[11px] space-y-0.5 text-red-800"></ul>
         </div>
         <form id="plan-form" onsubmit="STEMMate.editor.handleSave(event)" class="space-y-3">
@@ -259,7 +258,6 @@
         </div>
         <div id="sync-summary-box" class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="text-base"></span>
             <div>
               <strong class="block font-bold">Sync Queue Status</strong>
               <span id="queue-summary-text" class="text-[11px] text-amber-800">0 items in queue.</span>
@@ -273,11 +271,11 @@
 
     <!-- Bottom Navigation -->
     <nav id="app-nav" class="hidden bg-white border-t border-slate-200 py-1.5 px-2 flex justify-around text-[10px] text-slate-500 z-20 shadow-lg">
-      <button onclick="STEMMate.router.navigate('catalogue')" id="nav-catalogue" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50"><span class="text-base" aria-hidden="true"></span><span>Catalogue</span></button>
-      <button onclick="STEMMate.router.navigate('editor')" id="nav-editor" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50"><span class="text-base" aria-hidden="true"></span><span>Plan Creator</span></button>
-      <button onclick="STEMMate.router.navigate('counter')" id="nav-counter" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50"><span class="text-base" aria-hidden="true"></span><span>Headcount</span></button>
-      <button onclick="STEMMate.router.navigate('sync')" id="nav-sync" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50 relative"><span class="text-base" aria-hidden="true"></span><span>Sync Hub</span><span id="nav-queue-dot" class="hidden absolute top-1.5 right-4 w-2 h-2 bg-amber-500 rounded-full"></span></button>
-      <button onclick="STEMMate.auth.confirmSignOut()" id="nav-logout" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold text-red-600 rounded-lg hover:bg-red-50"><span class="text-base" aria-hidden="true"></span><span>Sign Out</span></button>
+      <button onclick="STEMMate.router.navigate('catalogue')" id="nav-catalogue" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50"><span>Catalogue</span></button>
+      <button onclick="STEMMate.router.navigate('editor')" id="nav-editor" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50"><span>Plan Creator</span></button>
+      <button onclick="STEMMate.router.navigate('counter')" id="nav-counter" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50"><span>Headcount</span></button>
+      <button onclick="STEMMate.router.navigate('sync')" id="nav-sync" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold rounded-lg hover:bg-slate-50 relative"><span>Sync Hub</span><span id="nav-queue-dot" class="hidden absolute top-1.5 right-4 w-2 h-2 bg-amber-500 rounded-full"></span></button>
+      <button onclick="STEMMate.auth.confirmSignOut()" id="nav-logout" class="flex-1 min-h-[48px] flex flex-col items-center justify-center font-semibold text-red-600 rounded-lg hover:bg-red-50"><span>Sign Out</span></button>
     </nav>
   </div>
 
@@ -285,11 +283,10 @@
   <div id="signout-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl p-5 max-w-xs w-full shadow-2xl border border-slate-100 space-y-4">
       <div class="text-center">
-        <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-2">⚠️</div>
         <h3 class="font-bold text-slate-900 text-sm">Sign Out & Clear Shared Device?</h3>
         <p class="text-xs text-slate-500 mt-1 leading-relaxed">Unsynced work will be cleared from this device to protect privacy for the next facilitator (ADR-5).</p>
       </div>
-      <div id="modal-unsynced-warning" class="hidden p-2 bg-red-50 border border-red-200 rounded-lg text-[11px] text-red-800 font-bold text-center">⚠️ You have unsynced plans in queue!</div>
+      <div id="modal-unsynced-warning" class="hidden p-2 bg-red-50 border border-red-200 rounded-lg text-[11px] text-red-800 font-bold text-center">You have unsynced plans in queue!</div>
       <div class="flex gap-2">
         <button onclick="STEMMate.auth.executeSignOut()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl text-xs transition">Clear & Sign Out</button>
         <button onclick="document.getElementById('signout-modal').classList.add('hidden')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition">Cancel</button>
@@ -301,7 +298,6 @@
   <div id="conflict-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl p-5 max-w-sm w-full shadow-2xl border border-slate-100 space-y-4">
       <div class="text-center">
-        <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-2">⛔</div>
         <h3 class="font-bold text-slate-900 text-sm">Resolve Sync Conflict</h3>
         <p class="text-xs text-slate-500 mt-1 leading-relaxed">Your local plan differs from the server copy. Choose which version to keep.</p>
       </div>
@@ -318,8 +314,8 @@
   <div id="settings-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl p-5 max-w-sm w-full shadow-2xl border border-slate-100 space-y-4">
       <div class="flex justify-between items-center border-b border-slate-200 pb-2">
-        <h3 class="font-bold text-slate-900 text-sm">⚙️ Settings</h3>
-        <button onclick="document.getElementById('settings-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-lg" aria-label="Close settings">×</button>
+        <h3 class="font-bold text-slate-900 text-sm">Settings</h3>
+        <button onclick="document.getElementById('settings-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-lg font-bold px-2" aria-label="Close settings">x</button>
       </div>
       <div class="space-y-3">
         <label class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl cursor-pointer">
@@ -336,7 +332,7 @@
         </label>
       </div>
       <div class="flex gap-2 pt-2 border-t border-slate-200">
-        <button onclick="STEMMate.ui.exportAll()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition">📦 Export All</button>
+        <button onclick="STEMMate.ui.exportAll()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition">Export All</button>
         <button onclick="document.getElementById('settings-modal').classList.add('hidden')" class="flex-1 bg-blue-700 hover:bg-blue-800 text-white font-bold py-2.5 rounded-xl text-xs transition">Done</button>
       </div>
     </div>
@@ -365,38 +361,29 @@
       // Abstract interface — BrowserPlanStore implements it.
       // ═══════════════════════════════════════════════════════════════
       const PlanStore = {
-        // Activities catalogue (read-only, from activities.json, cached)
         listActivities: () => [],
         getActivity: (id) => null,
         saveActivityForOffline: (activity) => {},
         listSavedActivities: () => [],
         isActivitySaved: (id) => false,
-        // Drafts (autosave)
         saveDraft: (draft) => {},
         getDraft: (activityId) => null,
         clearDraft: (activityId) => {},
-        // Plans
         savePlan: (plan) => {},
         getPlan: (id) => null,
         listPlans: () => [],
-        // Outbox (ADR-3)
         saveOutboxItem: (item) => {},
         getOutboxItem: (id) => null,
         listOutboxItems: () => [],
         updateOutboxItem: (item) => {},
         removeOutboxItem: (id) => {},
-        // Headcount (FR-04 / ADR-5 — count only)
         saveHeadcount: (hc) => {},
         getHeadcount: (activityId, date) => null,
-        // Settings (SR-02)
         saveSettings: (settings) => {},
         getSettings: () => ({}),
-        // Session
         saveSession: (session) => {},
         getSession: () => null,
-        // Shared-device privacy (ADR-5)
         clearUser: () => {},
-        // Decommissioning backup
         exportAll: () => '{}',
       };
 
@@ -424,9 +411,7 @@
           catch (e) { console.error('Store write error:', e); return false; }
         },
 
-        // ── Activities ──
         async init() {
-          // Load activities.json on first run, cache in localStorage
           const cached = this._read(this._keys.activities, null);
           if (!cached) {
             try {
@@ -458,7 +443,6 @@
           return this._read(this._keys.savedActs, []).includes(id);
         },
 
-        // ── Drafts ──
         saveDraft(draft) {
           const drafts = this._read(this._keys.drafts, {});
           drafts[draft.activityId || 'custom'] = draft;
@@ -474,7 +458,6 @@
           this._write(this._keys.drafts, drafts);
         },
 
-        // ── Plans ──
         savePlan(plan) {
           const plans = this._read(this._keys.plans, {});
           plans[plan.id] = plan;
@@ -489,7 +472,6 @@
             .sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
         },
 
-        // ── Outbox (ADR-3: idempotencyKey, status, attempts, lastError, serverVersion) ──
         saveOutboxItem(item) {
           const outbox = this._read(this._keys.outbox, {});
           outbox[item.id] = item;
@@ -510,7 +492,6 @@
           this._write(this._keys.outbox, outbox);
         },
 
-        // ── Headcount (FR-04: count only, no names) ──
         saveHeadcount(hc) {
           const all = this._read(this._keys.headcount, {});
           all[`${hc.activityId || 'general'}|${hc.date}`] = hc;
@@ -521,7 +502,6 @@
           return all[`${activityId || 'general'}|${date}`] || null;
         },
 
-        // ── Settings ──
         saveSettings(settings) { this._write(this._keys.settings, settings); },
         getSettings() {
           return this._read(this._keys.settings, {
@@ -529,21 +509,17 @@
           });
         },
 
-        // ── Session ──
         saveSession(session) { this._write(this._keys.session, session); },
         getSession() { return this._read(this._keys.session, null); },
 
-        // ── Shared-device privacy (ADR-5: wipe user data, keep catalogue) ──
         clearUser() {
           localStorage.removeItem(this._keys.drafts);
           localStorage.removeItem(this._keys.plans);
           localStorage.removeItem(this._keys.outbox);
           localStorage.removeItem(this._keys.headcount);
           localStorage.removeItem(this._keys.session);
-          // Keep: activities (cached catalogue), savedActs (avoid re-download cost)
         },
 
-        // ── Decommissioning backup ──
         exportAll() {
           return JSON.stringify({
             exportedAt: new Date().toISOString(),
@@ -585,7 +561,7 @@
       };
 
       // ═══════════════════════════════════════════════════════════════
-      // SESSION MANAGER (FR-06 / ADR-5: school ID + PIN, clearUser on logout)
+      // SESSION MANAGER (FR-06 / ADR-5)
       // ═══════════════════════════════════════════════════════════════
       const SessionManager = {
         currentUser: null,
@@ -614,7 +590,7 @@
       };
 
       // ═══════════════════════════════════════════════════════════════
-      // CONNECTIVITY MONITOR (Figure 3: tells SyncManager when online)
+      // CONNECTIVITY MONITOR
       // ═══════════════════════════════════════════════════════════════
       const ConnectivityMonitor = {
         online: navigator.onLine,
@@ -635,7 +611,7 @@
       };
 
       // ═══════════════════════════════════════════════════════════════
-      // SETTINGS (SR-02: data-saving mode + simulation toggles)
+      // SETTINGS (SR-02)
       // ═══════════════════════════════════════════════════════════════
       const Settings = {
         data: { dataSavingMode: false, forceFail: false, simulateConflict: false },
@@ -650,11 +626,10 @@
       };
 
       // ═══════════════════════════════════════════════════════════════
-      // MOCK SYNC SERVICE (v0.1 stub — returns ok / conflict / failed)
+      // MOCK SYNC SERVICE
       // ═══════════════════════════════════════════════════════════════
       const MockSyncService = {
         async send(idempotencyKey, plan) {
-          // Simulate network delay (shorter in data-saving mode — SR-02)
           await new Promise(r => setTimeout(r, Settings.dataSavingMode ? 300 : 800));
           if (Settings.forceFail)
             return { status: 'failed', error: 'Network timeout (simulated).' };
@@ -671,25 +646,19 @@
       };
 
       // ═══════════════════════════════════════════════════════════════
-      // SYNC MANAGER (ADR-3 / Figures 5, 6, 7a)
-      // Outbox with idempotency keys, full state machine:
-      // Pending → Syncing → Synced | Failed → (Retry → Syncing | Keep offline → Pending)
-      //                         | → Conflict → (Keep mine → Syncing | Use server → Synced)
+      // SYNC MANAGER (ADR-3)
       // ═══════════════════════════════════════════════════════════════
       const SyncManager = {
-        conflictServerPlans: {},  // planId → server plan (stashed for review)
+        conflictServerPlans: {},
         listeners: [],
         currentConflictItemId: null,
 
         init() {
-          // When connectivity returns, try to drain the queue
           ConnectivityMonitor.onChange(online => {
             if (online) this.trySyncAll();
           });
         },
 
-        // Enqueue a plan. Idempotent: if an item for the same planId exists and
-        // isn't Synced, return it instead of creating a duplicate.
         async enqueue(plan) {
           const existing = BrowserPlanStore.listOutboxItems();
           const dup = existing.find(i => i.planId === plan.id && i.status !== 'Synced');
@@ -697,7 +666,7 @@
           const item = {
             id: uuid(),
             planId: plan.id,
-            idempotencyKey: uuid(),  // ADR-3: unique key for deduplication
+            idempotencyKey: uuid(),
             status: 'Pending',
             attempts: 0,
             lastError: null,
@@ -711,7 +680,6 @@
           return item;
         },
 
-        // Try to sync every Pending or Failed item (when online)
         async trySyncAll() {
           if (!ConnectivityMonitor.isOnline()) {
             showToast('Cannot sync: device is offline.', 'warning');
@@ -725,7 +693,6 @@
           }
         },
 
-        // Internal: sync a single outbox item through the state machine
         async _syncOne(item) {
           item.status = 'Syncing';
           item.lastAttemptAt = new Date().toISOString();
@@ -760,7 +727,6 @@
           this._notify();
         },
 
-        // Retry a Failed item — resends with the SAME idempotency key (Figure 6)
         async retry(itemId) {
           const item = BrowserPlanStore.getOutboxItem(itemId);
           if (!item) return;
@@ -773,7 +739,6 @@
           }
         },
 
-        // Keep offline — move a Failed item back to Pending (Figure 6)
         async keepOffline(itemId) {
           const item = BrowserPlanStore.getOutboxItem(itemId);
           if (!item) return;
@@ -782,12 +747,11 @@
           this._notify();
         },
 
-        // Resolve a Conflict: 'keep_mine' resends; 'use_server' replaces local (ADR-4)
         async resolve(itemId, choice) {
           const item = BrowserPlanStore.getOutboxItem(itemId);
           if (!item || item.status !== 'Conflict') return;
           if (choice === 'keep_mine') {
-            await this._syncOne(item);  // resend with same key
+            await this._syncOne(item);
           } else if (choice === 'use_server') {
             const serverPlan = this.conflictServerPlans[item.planId];
             if (serverPlan) BrowserPlanStore.savePlan(serverPlan);
@@ -798,7 +762,6 @@
           }
         },
 
-        // Open the conflict review dialog (ADR-4: side-by-side)
         openConflictReview(itemId) {
           const item = BrowserPlanStore.getOutboxItem(itemId);
           if (!item || item.status !== 'Conflict') return;
@@ -842,7 +805,7 @@
       };
 
       // ═══════════════════════════════════════════════════════════════
-      // PLAN SERVICE (Figure 3: saves drafts + plans, enqueues sync)
+      // PLAN SERVICE
       // ═══════════════════════════════════════════════════════════════
       const PlanService = {
         saveDraft(draft) { BrowserPlanStore.saveDraft(draft); },
@@ -871,7 +834,7 @@
       };
 
       // ═══════════════════════════════════════════════════════════════
-      // HEADCOUNT SERVICE (FR-04 / ADR-5: aggregate count only)
+      // HEADCOUNT SERVICE
       // ═══════════════════════════════════════════════════════════════
       const HeadcountService = {
         save(activityId, date, count) {
@@ -903,7 +866,7 @@
         const nav = document.getElementById('app-nav');
         if (viewId === 'login') { header.classList.add('hidden'); nav.classList.add('hidden'); }
         else { header.classList.remove('hidden'); nav.classList.remove('hidden'); }
-        // Update nav active states
+
         ['catalogue', 'editor', 'counter', 'sync'].forEach(tab => {
           const btn = document.getElementById(`nav-${tab}`);
           if (btn) {
@@ -924,7 +887,7 @@
       }
 
       // ═══════════════════════════════════════════════════════════════
-      // NETWORK & UI BANNER (QR-02: text + icon, not colour alone)
+      // NETWORK & UI BANNER
       // ═══════════════════════════════════════════════════════════════
       function updateNetworkStatus() {
         const online = ConnectivityMonitor.isOnline();
@@ -933,10 +896,10 @@
         const text = document.getElementById('status-text');
         if (online) {
           banner.className = 'bg-blue-700 text-white text-xs font-semibold px-4 py-2 flex items-center justify-between shadow-sm z-30 transition-colors duration-200';
-          icon.textContent = '🌐'; text.textContent = 'Cloud Connected';
+          icon.textContent = '[Net]'; text.textContent = 'Cloud Connected';
         } else {
           banner.className = 'bg-amber-600 text-white text-xs font-semibold px-4 py-2 flex items-center justify-between shadow-sm z-30 transition-colors duration-200';
-          icon.textContent = '⚠️'; text.textContent = 'Offline Mode — Saved Local';
+          icon.textContent = '[Off]'; text.textContent = 'Offline Mode — Saved Local';
         }
       }
 
@@ -1027,7 +990,7 @@
             <p class="text-[11px] text-slate-500 mt-1">${act.duration} mins • ${act.topic}</p>
             <div class="mt-2.5 pt-2 border-t border-slate-100 text-blue-700 font-bold text-[11px] flex items-center justify-between">
               <span>View Instructions & Safety &rarr;</span>
-              ${saved ? '<span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-medium">✓ Saved Offline</span>' : '<span class="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-medium">Tap to Save</span>'}
+              ${saved ? '<span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-medium">Saved Offline</span>' : '<span class="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-medium">Tap to Save</span>'}
             </div>
           </div>`;
         }).join('');
@@ -1044,17 +1007,16 @@
           </div>
           <p class="text-xs text-slate-500">${act.duration} Mins • ${act.topic}</p>
 
-          <!-- FR-02: Save Offline button -->
           <button onclick="STEMMate.catalogue.saveOffline('${act.id}')" class="w-full ${saved ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-700 hover:bg-blue-800'} text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2">
-            ${saved ? '✓ Saved Offline — Tap to Remove' : '📥 Save This Activity for Offline Use'}
+            ${saved ? 'Saved Offline — Tap to Remove' : 'Save This Activity for Offline Use'}
           </button>
 
           <div class="p-3 bg-red-50/70 border border-red-200 rounded-xl text-xs space-y-1">
-            <h4 class="font-bold text-red-900 flex items-center gap-1">⚠️ Safety Notes (FR-03)</h4>
+            <h4 class="font-bold text-red-900">Safety Notes</h4>
             <p class="text-red-800 text-[11px]">${act.safety || 'Standard classroom supervision applies.'}</p>
           </div>
           <div class="p-3 bg-blue-50/70 border border-blue-200 rounded-xl text-xs space-y-1">
-            <h4 class="font-bold text-blue-900">💡 Inclusion Prompts</h4>
+            <h4 class="font-bold text-blue-900">Inclusion Prompts</h4>
             <p class="text-blue-800 text-[11px]">${act.inclusion || 'Adapt pace as necessary.'}</p>
           </div>
           <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1.5">
@@ -1067,7 +1029,7 @@
             <h4 class="font-bold text-slate-800">Step-by-Step Instructions:</h4>
             <p class="text-slate-700 text-[11px] whitespace-pre-line leading-relaxed">${act.notes}</p>
           </div>
-          <button onclick="STEMMate.router.navigate('editor'); STEMMate.editor.seedFromActivity('${act.id}')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs transition">📝 Start a Session Plan from This Activity</button>`;
+          <button onclick="STEMMate.router.navigate('editor'); STEMMate.editor.seedFromActivity('${act.id}')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs transition">Start a Session Plan from This Activity</button>`;
         navigate('detail');
       }
 
@@ -1076,7 +1038,6 @@
         if (!act) return;
         const saved = BrowserPlanStore.isActivitySaved(id);
         if (saved) {
-          // Remove from saved
           const savedActs = JSON.parse(localStorage.getItem('stem_saved_activities') || '[]');
           const idx = savedActs.indexOf(id);
           if (idx >= 0) savedActs.splice(idx, 1);
@@ -1086,12 +1047,12 @@
           BrowserPlanStore.saveActivityForOffline(act);
           showToast(`"${act.title}" is now available offline.`, 'success');
         }
-        openDetail(id);  // re-render
+        openDetail(id);
         renderCatalogue();
       }
 
       // ═══════════════════════════════════════════════════════════════
-      // PLAN EDITOR (FR-03 / QR-04 Validation / ADR-3 Autosave)
+      // PLAN EDITOR
       // ═══════════════════════════════════════════════════════════════
       let currentDraftActivityId = null;
 
@@ -1196,7 +1157,7 @@
       }
 
       // ═══════════════════════════════════════════════════════════════
-      // HEADCOUNT COUNTER (FR-04)
+      // HEADCOUNT COUNTER
       // ═══════════════════════════════════════════════════════════════
       function adjustCounter(val) {
         state.attendance = Math.max(0, state.attendance + val);
@@ -1214,14 +1175,14 @@
       }
 
       // ═══════════════════════════════════════════════════════════════
-      // SYNC QUEUE RENDER (FR-05 — full state machine with all transitions)
+      // SYNC QUEUE RENDER
       // ═══════════════════════════════════════════════════════════════
       const STATUS_META = {
-        Pending:   { icon: '⏳', label: 'Pending',   cls: 'badge-pending' },
-        Syncing:   { icon: '🔄', label: 'Syncing',   cls: 'badge-syncing' },
-        Synced:    { icon: '✓',  label: 'Synced',    cls: 'badge-synced' },
-        Failed:    { icon: '⚠️', label: 'Failed',    cls: 'badge-failed' },
-        Conflict:  { icon: '⛔', label: 'Conflict',  cls: 'badge-conflict' },
+        Pending:   { label: 'Pending',   cls: 'badge-pending' },
+        Syncing:   { label: 'Syncing',   cls: 'badge-syncing' },
+        Synced:    { label: 'Synced',    cls: 'badge-synced' },
+        Failed:    { label: 'Failed',    cls: 'badge-failed' },
+        Conflict:  { label: 'Conflict',  cls: 'badge-conflict' },
       };
 
       function renderSyncQueue() {
@@ -1237,7 +1198,7 @@
           let actions = '';
           if (item.status === 'Failed') {
             actions = `
-              <button onclick="STEMMate.sync.retry('${item.id}')" class="flex-1 bg-blue-700 hover:bg-blue-800 text-white text-[10px] py-1.5 rounded-lg font-bold">Retry (same key)</button>
+              <button onclick="STEMMate.sync.retry('${item.id}')" class="flex-1 bg-blue-700 hover:bg-blue-800 text-white text-[10px] py-1.5 rounded-lg font-bold">Retry</button>
               <button onclick="STEMMate.sync.keepOffline('${item.id}')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] py-1.5 rounded-lg font-bold">Keep offline</button>`;
           } else if (item.status === 'Conflict') {
             actions = `
@@ -1247,9 +1208,9 @@
           } else if (item.status === 'Pending') {
             actions = `<span class="text-[10px] text-slate-500 italic flex-1 text-center">Will sync when online.</span>`;
           } else if (item.status === 'Synced') {
-            actions = `<span class="text-[10px] text-emerald-700 font-bold flex-1 text-center">✓ Synced (server v${item.serverVersion})</span>`;
+            actions = `<span class="text-[10px] text-emerald-700 font-bold flex-1 text-center">Synced (server v${item.serverVersion})</span>`;
           } else if (item.status === 'Syncing') {
-            actions = `<span class="text-[10px] text-blue-700 font-bold flex-1 text-center">🔄 Syncing...</span>`;
+            actions = `<span class="text-[10px] text-blue-700 font-bold flex-1 text-center">Syncing...</span>`;
           }
           return `
           <div class="p-3.5 bg-white border border-slate-200 rounded-2xl text-xs space-y-2 shadow-sm">
@@ -1260,7 +1221,7 @@
                 ${item.lastError ? `<p class="text-[10px] text-red-600 mt-0.5">Error: ${item.lastError}</p>` : ''}
                 <p class="text-[9px] text-slate-400 mt-0.5 font-mono">key: ${item.idempotencyKey.slice(0, 8)}...</p>
               </div>
-              <span class="text-[9px] ${meta.cls} font-bold px-2 py-0.5 rounded-full">${meta.icon} ${meta.label}</span>
+              <span class="text-[9px] ${meta.cls} font-bold px-2 py-0.5 rounded-full">${meta.label}</span>
             </div>
             <div class="flex gap-2 pt-1 border-t border-slate-100">${actions}</div>
           </div>`;
@@ -1268,7 +1229,7 @@
       }
 
       // ═══════════════════════════════════════════════════════════════
-      // SETTINGS UI (SR-02)
+      // SETTINGS UI
       // ═══════════════════════════════════════════════════════════════
       function openSettings() {
         document.getElementById('set-datamode').checked = Settings.dataSavingMode;
@@ -1295,7 +1256,7 @@
       }
 
       // ═══════════════════════════════════════════════════════════════
-      // TOAST NOTIFICATIONS (aria-live)
+      // TOAST NOTIFICATIONS
       // ═══════════════════════════════════════════════════════════════
       function showToast(message, type = 'info') {
         const region = document.getElementById('toast-region');
@@ -1307,7 +1268,7 @@
         const t = document.createElement('div');
         t.className = `${colors[type] || colors.info} text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-lg pointer-events-auto flex items-center gap-2 max-w-full`;
         t.setAttribute('role', 'status');
-        t.innerHTML = `<span class="flex-1">${message}</span><button onclick="this.parentElement.remove()" class="text-white/70 hover:text-white" aria-label="Close">×</button>`;
+        t.innerHTML = `<span class="flex-1">${message}</span><button onclick="this.parentElement.remove()" class="text-white/70 hover:text-white font-bold px-1" aria-label="Close">x</button>`;
         region.appendChild(t);
         setTimeout(() => t.remove(), 4000);
       }
@@ -1325,7 +1286,7 @@
       }
 
       // ═══════════════════════════════════════════════════════════════
-      // SERVICE WORKER REGISTRATION (ADR-1)
+      // SERVICE WORKER REGISTRATION
       // ═══════════════════════════════════════════════════════════════
       function registerSW() {
         if ('serviceWorker' in navigator) {
@@ -1340,17 +1301,14 @@
       // ═══════════════════════════════════════════════════════════════
       async function init() {
         registerSW();
-        // Initialize services
-        await BrowserPlanStore.init();    // load activities.json
+        await BrowserPlanStore.init();
         await Settings.load();
         await SessionManager.init();
         ConnectivityMonitor.init();
         SyncManager.init();
 
-        // Load activities into state
         state.activities = await BrowserPlanStore.listActivities();
 
-        // Wire up listeners
         ConnectivityMonitor.onChange(() => {
           updateNetworkStatus();
           updateQueueBadges();
@@ -1367,10 +1325,8 @@
         updateNetworkStatus();
         updateQueueBadges();
 
-        // If online, try draining any leftover queue
         if (ConnectivityMonitor.isOnline()) SyncManager.trySyncAll();
 
-        // Initial screen
         if (SessionManager.isLoggedIn()) {
           document.getElementById('user-display-id').textContent = `ID: ${SessionManager.getUser().schoolId}`;
           navigate('catalogue');
@@ -1380,7 +1336,7 @@
       }
 
       // ═══════════════════════════════════════════════════════════════
-      // PUBLIC API (exposed as window.STEMMate)
+      // PUBLIC API
       // ═══════════════════════════════════════════════════════════════
       window.STEMMate = {
         state,
