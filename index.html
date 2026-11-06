@@ -54,7 +54,7 @@
     <!-- Top Status Banner (QR-02: text + icon, not colour alone) -->
     <div id="status-banner" role="status" aria-live="polite" class="bg-blue-700 text-white text-xs font-semibold px-4 py-2 flex items-center justify-between shadow-sm z-30 transition-colors duration-200">
       <div class="flex items-center gap-2">
-        <span id="status-icon" class="text-sm font-bold" aria-hidden="true">[Net]</span>
+        <span id="status-icon" class="text-xs font-bold uppercase tracking-wider" aria-hidden="true">[Status]</span>
         <span id="status-text" class="text-[11px] sm:text-xs">Cloud Connected</span>
       </div>
       <div class="flex items-center gap-2">
@@ -346,9 +346,6 @@
     (function () {
       'use strict';
 
-      // ═══════════════════════════════════════════════════════════════
-      // UUID HELPER
-      // ═══════════════════════════════════════════════════════════════
       function uuid() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
           const r = Math.random() * 16 | 0;
@@ -356,10 +353,6 @@
         });
       }
 
-      // ═══════════════════════════════════════════════════════════════
-      // PLANSTORE INTERFACE (ADR-2 / Figure 7a)
-      // Abstract interface — BrowserPlanStore implements it.
-      // ═══════════════════════════════════════════════════════════════
       const PlanStore = {
         listActivities: () => [],
         getActivity: (id) => null,
@@ -387,10 +380,6 @@
         exportAll: () => '{}',
       };
 
-      // ═══════════════════════════════════════════════════════════════
-      // BROWSERPLANSTORE (ADR-2 / Figure 7a)
-      // localStorage-backed implementation of PlanStore.
-      // ═══════════════════════════════════════════════════════════════
       const BrowserPlanStore = {
         _keys: {
           activities: 'stem_activities',
@@ -418,7 +407,6 @@
               const res = await fetch('activities.json');
               const list = await res.json();
               this._write(this._keys.activities, list);
-              console.log('[Store] activities.json loaded and cached:', list.length, 'activities');
             } catch (e) {
               console.error('[Store] Failed to load activities.json:', e);
             }
@@ -531,9 +519,6 @@
         },
       };
 
-      // ═══════════════════════════════════════════════════════════════
-      // VALIDATION (Figure 3 / QR-04: errors with recovery guidance)
-      // ═══════════════════════════════════════════════════════════════
       const Validation = {
         validatePlan(draft) {
           const errors = [];
@@ -544,9 +529,7 @@
           const duration = parseInt(draft.duration, 10);
           if (isNaN(duration) || duration <= 0)
             errors.push({ field: 'duration', message: 'Duration must be a positive number.' });
-          const summary = errors.length === 0 ? 'Plan is valid.' :
-            `Fix ${errors.length} field${errors.length > 1 ? 's' : ''} before saving.`;
-          return { valid: errors.length === 0, errors, summary };
+          return { valid: errors.length === 0, errors };
         },
         validateLogin(schoolId, pin) {
           const errors = [];
@@ -560,9 +543,6 @@
         },
       };
 
-      // ═══════════════════════════════════════════════════════════════
-      // SESSION MANAGER (FR-06 / ADR-5)
-      // ═══════════════════════════════════════════════════════════════
       const SessionManager = {
         currentUser: null,
         listeners: [],
@@ -589,9 +569,6 @@
         _notify() { this.listeners.forEach(fn => fn(this.currentUser)); },
       };
 
-      // ═══════════════════════════════════════════════════════════════
-      // CONNECTIVITY MONITOR
-      // ═══════════════════════════════════════════════════════════════
       const ConnectivityMonitor = {
         online: navigator.onLine,
         listeners: [],
@@ -610,9 +587,6 @@
         _notify() { this.listeners.forEach(fn => fn(this.online)); },
       };
 
-      // ═══════════════════════════════════════════════════════════════
-      // SETTINGS (SR-02)
-      // ═══════════════════════════════════════════════════════════════
       const Settings = {
         data: { dataSavingMode: false, forceFail: false, simulateConflict: false },
         async load() { this.data = BrowserPlanStore.getSettings(); },
@@ -625,9 +599,6 @@
         get simulateConflict() { return this.data.simulateConflict; },
       };
 
-      // ═══════════════════════════════════════════════════════════════
-      // MOCK SYNC SERVICE
-      // ═══════════════════════════════════════════════════════════════
       const MockSyncService = {
         async send(idempotencyKey, plan) {
           await new Promise(r => setTimeout(r, Settings.dataSavingMode ? 300 : 800));
@@ -645,9 +616,6 @@
         },
       };
 
-      // ═══════════════════════════════════════════════════════════════
-      // SYNC MANAGER (ADR-3)
-      // ═══════════════════════════════════════════════════════════════
       const SyncManager = {
         conflictServerPlans: {},
         listeners: [],
@@ -804,9 +772,6 @@
         _notify() { this.listeners.forEach(fn => fn()); },
       };
 
-      // ═══════════════════════════════════════════════════════════════
-      // PLAN SERVICE
-      // ═══════════════════════════════════════════════════════════════
       const PlanService = {
         saveDraft(draft) { BrowserPlanStore.saveDraft(draft); },
         async savePlan(draft) {
@@ -833,9 +798,6 @@
         },
       };
 
-      // ═══════════════════════════════════════════════════════════════
-      // HEADCOUNT SERVICE
-      // ═══════════════════════════════════════════════════════════════
       const HeadcountService = {
         save(activityId, date, count) {
           const hc = { id: uuid(), activityId: activityId || 'general', date, count };
@@ -844,9 +806,6 @@
         },
       };
 
-      // ═══════════════════════════════════════════════════════════════
-      // APPLICATION STATE & ROUTER
-      // ═══════════════════════════════════════════════════════════════
       const state = {
         currentView: 'login',
         activities: [],
@@ -886,9 +845,6 @@
         document.getElementById('main-content').focus();
       }
 
-      // ═══════════════════════════════════════════════════════════════
-      // NETWORK & UI BANNER
-      // ═══════════════════════════════════════════════════════════════
       function updateNetworkStatus() {
         const online = ConnectivityMonitor.isOnline();
         const banner = document.getElementById('status-banner');
@@ -923,9 +879,6 @@
         }
       }
 
-      // ═══════════════════════════════════════════════════════════════
-      // AUTH HANDLERS
-      // ═══════════════════════════════════════════════════════════════
       async function handleLogin(e) {
         if (e) e.preventDefault();
         const schoolId = document.getElementById('login-school').value.trim();
@@ -960,9 +913,6 @@
         navigate('login');
       }
 
-      // ═══════════════════════════════════════════════════════════════
-      // CATALOGUE (FR-01)
-      // ═══════════════════════════════════════════════════════════════
       function renderCatalogue() {
         const container = document.getElementById('catalogue-list');
         const query = (document.getElementById('search-input').value || '').toLowerCase();
@@ -1051,9 +1001,6 @@
         renderCatalogue();
       }
 
-      // ═══════════════════════════════════════════════════════════════
-      // PLAN EDITOR
-      // ═══════════════════════════════════════════════════════════════
       let currentDraftActivityId = null;
 
       function seedFromActivity(activityId) {
@@ -1156,9 +1103,6 @@
         return true;
       }
 
-      // ═══════════════════════════════════════════════════════════════
-      // HEADCOUNT COUNTER
-      // ═══════════════════════════════════════════════════════════════
       function adjustCounter(val) {
         state.attendance = Math.max(0, state.attendance + val);
         updateCounterUI();
@@ -1174,9 +1118,6 @@
         showToast(`Headcount of ${state.attendance} saved locally.`, 'success');
       }
 
-      // ═══════════════════════════════════════════════════════════════
-      // SYNC QUEUE RENDER
-      // ═══════════════════════════════════════════════════════════════
       const STATUS_META = {
         Pending:   { label: 'Pending',   cls: 'badge-pending' },
         Syncing:   { label: 'Syncing',   cls: 'badge-syncing' },
@@ -1228,9 +1169,6 @@
         }).join('');
       }
 
-      // ═══════════════════════════════════════════════════════════════
-      // SETTINGS UI
-      // ═══════════════════════════════════════════════════════════════
       function openSettings() {
         document.getElementById('set-datamode').checked = Settings.dataSavingMode;
         document.getElementById('set-forcefail').checked = Settings.forceFail;
@@ -1255,9 +1193,6 @@
         showToast('All data exported.', 'success');
       }
 
-      // ═══════════════════════════════════════════════════════════════
-      // TOAST NOTIFICATIONS
-      // ═══════════════════════════════════════════════════════════════
       function showToast(message, type = 'info') {
         const region = document.getElementById('toast-region');
         if (!region) return;
@@ -1273,9 +1208,6 @@
         setTimeout(() => t.remove(), 4000);
       }
 
-      // ═══════════════════════════════════════════════════════════════
-      // VIEW MODE TOGGLE
-      // ═══════════════════════════════════════════════════════════════
       function toggleViewMode() {
         const container = document.getElementById('app-container');
         if (container.classList.contains('max-w-md')) {
@@ -1285,9 +1217,6 @@
         }
       }
 
-      // ═══════════════════════════════════════════════════════════════
-      // SERVICE WORKER REGISTRATION
-      // ═══════════════════════════════════════════════════════════════
       function registerSW() {
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.register('./sw.js')
@@ -1296,9 +1225,6 @@
         }
       }
 
-      // ═══════════════════════════════════════════════════════════════
-      // BOOT
-      // ═══════════════════════════════════════════════════════════════
       async function init() {
         registerSW();
         await BrowserPlanStore.init();
@@ -1335,9 +1261,6 @@
         }
       }
 
-      // ═══════════════════════════════════════════════════════════════
-      // PUBLIC API
-      // ═══════════════════════════════════════════════════════════════
       window.STEMMate = {
         state,
         router: { navigate, },
