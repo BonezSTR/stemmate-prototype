@@ -12,13 +12,13 @@
   "categories": ["education", "productivity", "utilities"],
   "icons": [
     {
-      "src": "Logo.jpg",
+      "src": "Logo.png",
       "sizes": "192x192",
       "type": "image/jpeg",
       "purpose": "any"
     },
     {
-      "src": "Logo.jpg",
+      "src": "Logo.png",
       "sizes": "512x512",
       "type": "image/jpeg",
       "purpose": "any maskable"
