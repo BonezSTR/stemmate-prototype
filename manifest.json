@@ -1,0 +1,27 @@
+{
+  "name": "STEMMate Namibia - Facilitator Offline Session Planner",
+  "short_name": "STEMMate",
+  "description": "Offline-first STEM planning tool for facilitators in low-resource environments.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#1d4ed8",
+  "background_color": "#f1f5f9",
+  "lang": "en",
+  "categories": ["education", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "Logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "Logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
